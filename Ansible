@@ -10,3 +10,8 @@ ansible -m user -a "name=siri state=directory" all
 ansible -m yum -a "name=httpd state=installed" all
 #To start a service
 ansible -m service -a "name=httpd state=started" all
+To check connectivity of servers
+ansible -m ping all
+To check Windows server working or not
+ansible -m win_ping windows
+

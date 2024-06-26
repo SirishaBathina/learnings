@@ -1,10 +1,10 @@
-pub key put inti another server procees-2
+* pub key put into another server procees-2
 vi Test_key.pem
      chmod 400 Test_key.pem
      ssh-keygen -y -f Test_key.pem > Test_key.pem.pub
      ssh-copy-id -f -i Test_key.pem.pub -o IdentityFile=Test_key.pem ec2-user@15.207.110.57
     ssh -o 'IdentityFile=Test_key.pem' ec2-user@15.207.110.57
-
+***********************************************************************************************************
 
 yum update -y                                          ##to update software to latest##
 useradd sirisha                                        ##to create a user##
@@ -18,7 +18,7 @@ vi /etc/ssh/sshd_config                                ##login user settings##
     PasswordAuthentication yes
     ClientAliveInterval 120                                ##not to logout the session of the server
 systemctl restart sshd                                 ##after changing in sshd_config  we should restart sshd service##
-
+**********************************************************************************************************************
 * procees-1
 cd .ssh/
 ls
@@ -29,6 +29,7 @@ authorized_keys  id_rsa  id_rsa.pub  known_hosts
 ssh anotherserver pubipTo login
 ssh -i id_rsa ec2-user@IP
 ssh-copy-id username@IPAddress                         ## to copy pubkey from source server(.ssh folder) to destination server
+*********************************************************************************************************************************
 cd .ssh/
 id_rsa id_rsa.pub go for pub key
 cat id_rsa.pub

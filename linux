@@ -1,0 +1,5 @@
+     vi Test_key.pem
+     chmod 400 Test_key.pem
+     ssh-keygen -y -f Test_key.pem > Test_key.pem.pub
+     ssh-copy-id -f -i Test_key.pem.pub -o IdentityFile=Test_key.pem ec2-user@15.207.110.57
+    ssh -o 'IdentityFile=Test_key.pem' ec2-user@15.207.110.57

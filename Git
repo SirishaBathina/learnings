@@ -1,0 +1,87 @@
+
+apt update
+apt-get install git -y
+git init .                  ===============>  to intilize the local repo
+*********************************************************************************
+passwrad less authentication
+vi .netrc
+aadd thers lines
+machine github.com
+login devops.bathinasirisha@gmail.com
+password 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
+***********************************************************************************
+To create a file and add the files
+touch f1
+vi f1
+git add f1
+git status
+git commit -m "file created"f1
+git log
+*************************************************************************************
+##congiguration of user
+git config --global user.name "SirishaBathina"
+git config --global user.email "devops.bathinasirisha@gmail.com"
+touch f2
+vi f2
+git add f2
+git commit -m "file2"f2
+git log 
+***************************************************************************************
+###Muiltiple files to create
+touch siri{1..4}
+git status
+git add siri*
+######If it is added we can get back the changes
+git restore --staged siri1  <(filename)>
+git restore --staged .
+git commit -m "files to be commited"siri*
+*****************************************************************************************
+##To create an empty branch 
+git switch --orphan my_empty_branch
+git commit --allow-empty -m "intial empty commit and push"
+git push -u origin  my_empty_branch
+****************************************************************************************
+I want to create files but it is not to be add and commit
+we can go for vi .gitignore
+harshu1
+harshu2
+those files willbe there but not added not commited
+****************************************************************************************
+git branch ===show branch list
+git branch dev ====(dev branch created)
+git checkout dev  =====to swtich to dev branch
+touch dev{1..4}
+git add dev*
+git commit -m "dev commits" dev*
+git log
+git commit -m "dev commits" dev1 dev2  ======dev1,dev2 only commited
+git checkout -b main    =======>to create a new main  branch and switch to that branch
+git checkout -b feature =====>to create new feature branch
+git branch -m feature bug   ========>to rename branch oldname newname
+ git branch -D bug        =========>to delete the branch
+switch to another branch then only delete possible
+git merge feature    in dev lo em iethe files vunnayo avi anni feature lo ki vasthayi
+git checkout commit id(prev commit)     ======>to checkout previous commit 
+git log
+git checkout commitid(new Commit)
+**************************************************************************************************
+Suppose unfortunately some files deleted we can restore by using
+git restore siri*
+touch hello
+git add hello 
+ i want to get back the hello changes
+git restore --staged hello   =====we can get back the changes
+git status
+*******************************************************************************************************
+git log --all              ======================>To see all commits
+
+git checkout feature
+git merge feature           ==============To merge the branch
+git remote add origin https://github.com/SirishaBathina/application.git      =======>To add the code to remote repository
+git push -u origin main              ======To push the code to remote repo
+git tag -a "v1.0" -m "this is version 1"     ====To tag which is imp
+git tag
+git tag show v1.0     =====To show available commited tags
+git ignore
+
+branch potection rules in settings to scecure our repo

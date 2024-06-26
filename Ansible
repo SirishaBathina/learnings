@@ -1,0 +1,12 @@
+#To create a user in all hosts
+ansible -m user -a "name=siri state=present" all
+#To delete a user 
+ansible -m user -a "name=siri state=absent" all
+#To create file
+ansible -m user -a "name=siri state=present" all
+#To create a directory
+ansible -m user -a "name=siri state=directory" all
+#To install a package
+ansible -m yum -a "name=httpd state=installed" all
+#To start a service
+ansible -m service -a "name=httpd state=started" all

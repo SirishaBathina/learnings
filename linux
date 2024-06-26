@@ -1,5 +1,52 @@
-     vi Test_key.pem
+pub key put inti another server procees-2
+vi Test_key.pem
      chmod 400 Test_key.pem
      ssh-keygen -y -f Test_key.pem > Test_key.pem.pub
      ssh-copy-id -f -i Test_key.pem.pub -o IdentityFile=Test_key.pem ec2-user@15.207.110.57
     ssh -o 'IdentityFile=Test_key.pem' ec2-user@15.207.110.57
+
+
+yum update -y                                          ##to update software to latest##
+useradd sirisha                                        ##to create a user##
+passwd sirisha                                         ##to create a password for user##
+visudo                                                 ##to modify sudo file to give access to user
+    sirisha    ALL=(ALL)       ALL                         ## Allow root to run any commands anywhere
+    sirisha    ALL=(ALL)       NOPASSWD: ALL               ## Same thing without a password
+    
+vi /etc/ssh/sshd_config                                ##login user settings##
+    PermitRootLogin yes
+    PasswordAuthentication yes
+    ClientAliveInterval 120                                ##not to logout the session of the server
+systemctl restart sshd                                 ##after changing in sshd_config  we should restart sshd service##
+
+* procees-1
+cd .ssh/
+ls
+ssh-keygen                                             ## to generate id_rsa pub&privatekeys
+ls /home/sirisha/.ssh/
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+ cat /home/sirisha/.ssh/id_rsa.pub  ====put this pub key in anotherserver authorized keys(vim ~/.ssh/authorized_keys)
+ssh anotherserver pubipTo login
+ssh -i id_rsa ec2-user@IP
+ssh-copy-id username@IPAddress                         ## to copy pubkey from source server(.ssh folder) to destination server
+cd .ssh/
+id_rsa id_rsa.pub go for pub key
+cat id_rsa.pub
+
+ssh -i /var/lib/jenkins/workspace/id_rsa -oStrictHostKeyChecking=no siri@10.128.0.4 rm -rf /usr/share/nginx/html/index.html
+scp -r -i /var/lib/jenkins/workspace/id_rsa index.html siri@10.128.0.4:/usr/share/nginx/html/
+
+ENvironmnet varible
+    export                                            ## only ontil system restart
+    .bashrc                                           ## if you want the variable to be only for the current user logged-in;
+    /etc/environment                                  ## if you want the variable to be shared by all the users on the system.
+source .bashrc                                        ## To make sure that the changes are reflected immediately use the source
+
+sudo su - jenkins                                      ##to switch to another user
+systemctl status jenkins                               ##to check the service is running or not
+systemctl enable jenkins                               ##to start the service when server restart or start
+ssh -i identitykey username@IPAddress                  ##to connect from one server to another server
+scp -i .ssh/id_rsa dir1.zip username@IPadress:~/       ## to copy file from oneserver to another server
+netstat -tulpn                                         ##to check which ports are in use(Tcp,Udp,Listening,port numbers)
+ps -ef                                                 ##To check the process currently running
+top                                                    ##To check the memory and cpu utilization of the process running in the server

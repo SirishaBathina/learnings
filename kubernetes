@@ -1,0 +1,8 @@
+docekr pull httpd
+docker run -dit -p 80:80 httpd:latest
+kubectl create deployment dept1 --image=httpd
+kubectl get deploymnet
+kubectl expose deployment dept1 --type=NodePort --port=80 --target-port=80     (Server-ip:80 openports)
+kubectl expose deployment dept1 --type=LoadBalancer --port=80 --target-port=80 (url open ports)
+kubectl get service
+

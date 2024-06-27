@@ -1,3 +1,114 @@
+🏷️ Registry & Repository:
+docker login: Log in to a registry.
+
+docker logout: Log out from a registry.
+
+docker search: Search the registry for an image.
+
+docker pull: Pull an image from the registry.
+
+docker push: Push an image to the registry.
+********************************************************************
+🏗️Docker Images:
+docker images: Display all images.
+
+docker import: Create an image from a tarball.
+
+docker build: Create an image from Dockerfile.
+
+docker commit: Create an image from a container.
+
+docker rmi: Remove an image.
+
+docker load: Load an image from a tar archive.
+
+docker save: Save an image to a tar archive.
+*****************************************************************
+📦 Docker Container:
+docker create: Create a container without starting it.
+
+docker rename: Rename a container.
+
+docker run: Create and start a container.
+
+docker rm: Delete a container.
+
+docker update: Update a container's resource limits.
+
+docker start: Start a container.
+
+docker stop: Stop a running container.
+
+docker restart: Restart a container.
+
+docker pause: Pause a running container.
+
+docker unpause: Unpause a paused container.
+
+docker kill: Send a SIGKILL to a running container.
+
+docker exec: Execute a command in a container.
+
+docker attach: Attach to a running container.
+************************************************************************************
+🚢 Docker-compose:
+docker-compose start: Start containers.
+
+docker-compose stop: Stop containers.
+
+docker-compose pause: Pause containers.
+
+docker-compose unpause: Unpause containers.
+
+docker-compose ps: List containers.
+
+docker-compose up: Start all services.
+
+docker-compose down: Stop and remove containers, networks, volumes, and images.
+*******************************************************************************88
+🌐 Docker Network:
+docker network create: Create a new network.
+
+docker network rm: Remove a network.
+
+docker network ls: List all networks.
+
+docker network inspect: Show detailed network information.
+
+docker network connect: Connect a container to a network.
+
+docker network disconnect: Disconnect a container from a network.
+***********************************************************************8
+💾 Docker Volume:
+docker volume create: Create volumes.
+
+docker volume rm: Remove volumes.
+
+docker volume ls: List volumes.
+
+docker volume inspect: Inspect volumes.
+**********************************************************************
+🧹 Cleanup & Optimization:
+docker image prune: Clean unused/dangling images.
+
+docker image prune -a: Remove images not used in a container.
+
+docker system prune: Prune the entire system.
+
+docker rm $(docker ps -a -q): Delete all stopped containers.
+
+docker rmi $(docker images -q): Delete all images.
+************************************************************************
+🔧 Services:
+docker service ls: List all services.
+
+docker stack services: Display running services.
+
+docker service logs: Display service logs.
+
+docker service scale: Scale a service across nodes.
+*******************************************************************
+
 docker login if not use below cmd
 docker login -u devopsbathinasirisha28 -p Sirisha@2024
 

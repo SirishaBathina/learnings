@@ -6,3 +6,37 @@ kubectl expose deployment dept1 --type=NodePort --port=80 --target-port=80     (
 kubectl expose deployment dept1 --type=LoadBalancer --port=80 --target-port=80 (url open ports)
 kubectl get service
 
+****************************8
+Here are some common Kubernetes issues and their resolutions Part 1:
+
+🚨 Issue: Pods in CrashLoopBackOff State
+🔍 Cause: Application errors, missing configurations, or resources.
+🔧 Resolution: Check pod logs using kubectl logs [pod-name] to identify the error. Ensure configurations are correct and resources (like memory and CPU) are properly allocated.
+
+⚠️ Issue: Persistent Volume Claims (PVC) Stuck in Pending State
+🔍 Cause: Insufficient storage or misconfigured StorageClass.
+🔧 Resolution: Verify storage availability and ensure the StorageClass is correctly defined. Use kubectl describe pvc [pvc-name] for detailed error messages.
+
+❗ Issue: Service Unreachable
+🔍 Cause: Incorrect service configuration or network policies.
+🔧 Resolution: Check the service and endpoint details with kubectl describe svc [service-name]. Ensure network policies allow traffic to the service.
+
+⏳ Issue: High Pod Startup Latency
+🔍 Cause: Resource constraints or node performance issues.
+🔧 Resolution: Review resource requests and limits for pods. Consider increasing node resources or scaling the cluster.
+
+🔄 Issue: Rolling Update Failures
+🔍 Cause: Incompatible application versions or insufficient replicas.
+🔧 Resolution: Ensure backward compatibility of new versions. Increase the number of replicas to maintain availability during updates.
+
+🔍 Issue: Node Not Ready
+🔍 Cause: Node resource exhaustion, network issues, or kubelet failure.
+🔧 Resolution: Check node status with kubectl describe node [node-name]. Investigate kubelet logs and ensure node resources are sufficient.
+
+🔧 Issue: Container Image Pull Errors
+🔍 Cause: Incorrect image name, tag, or registry authentication issues.
+🔧 Resolution: Verify the image name and tag. Ensure credentials for private registries are configured correctly in Kubernetes secrets.
+
+📊 Issue: Metrics Server Not Working
+🔍 Cause: Incorrect installation or configuration.
+🔧 Resolution: Ensure the Metrics Server is deployed correctly. Check logs for errors using kubectl logs -n kube-system [metrics-server-pod].

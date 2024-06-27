@@ -23,7 +23,7 @@ vi /etc/ssh/sshd_config                                ##login user settings##
     ClientAliveInterval 120                                ##not to logout the session of the server
 systemctl restart sshd                                 ##after changing in sshd_config  we should restart sshd service##
 **********************************************************************************************************************
-* procees-1
+* process-1
 cd .ssh/
 ls
 ssh-keygen                                             ## to generate id_rsa pub&privatekeys

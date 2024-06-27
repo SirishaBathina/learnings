@@ -1,3 +1,7 @@
+Creating Nested Folders:
+mkdir -p A/B/C/D/E
+
+
 * pub key put into another server procees-2
 vi Test_key.pem
      chmod 400 Test_key.pem

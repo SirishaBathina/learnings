@@ -1,3 +1,10 @@
+Installation:
+yum update
+ amazon-linux-extras install ansible2 -y
+cd /etc/ansible/
+
+
+
 #To create a user in all hosts
 ansible -m user -a "name=siri state=present" all
 #To delete a user 

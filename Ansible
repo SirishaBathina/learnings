@@ -3,7 +3,7 @@ yum update
  amazon-linux-extras install ansible2 -y
 cd /etc/ansible/
 
-
+ansible_python_interpreter=/usr/bin/python3
 
 #To create a user in all hosts
 ansible -m user -a "name=siri state=present" all

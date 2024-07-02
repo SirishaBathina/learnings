@@ -1,3 +1,10 @@
+#### how to make master as target machine ?
+[ansible]
+15.206.148.29 ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+*********************************************************************************
+
+
+###sample playbook
 ---
 - hosts: dev
   tasks:
@@ -9,7 +16,7 @@
     user: name=tulasi state=present
   - name: create a file
     file: name=/tmp/file1 state=touch
-
+******************************************************************************************
 ###create ansible user and password in machines?
 ---
 - name: Create ansible user and set up password

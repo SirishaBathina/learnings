@@ -1,3 +1,15 @@
+---
+- hosts: dev
+  tasks:
+  - name: install application
+    yum: name=httpd state=installed
+  - name: start the service
+    service: name=httpd state=started
+  - name: create a user
+    user: name=tulasi state=present
+  - name: create a file
+    file: name=/tmp/file1 state=touch
+
 ###create ansible user and password in machines?
 ---
 - name: Create ansible user and set up password

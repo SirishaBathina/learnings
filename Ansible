@@ -25,3 +25,16 @@ ansible -m ping all
 To check Windows server working or not
 ansible -m win_ping windows
 
+ansible -m setup centos  --> to gather the information about our clients
+ansible-playbook 1stplaybook.yaml --> To run the playbook
+ 
+ansible-playbook 1stplaybook.yaml --check  --> to test the play book(dry run/preview)
+ansible-playbook 1stplaybook.yaml --syntax-check --> Syntax check
+ansible-playbook 1stplaybook.yaml --list-tasks  --> To list the how many tasks in playbook
+ansible-playbook 1stplaybook.yaml --step  --> TO execute the task in interactive mode(Y/N/C)
+ansible-playbook 1stplaybook.yaml --start-at-task="starting the httpd service"  --> To start from perticular task
+ ansible-playbook playbook.yml --list-tags  >> . To list the how many tags in playbook
+ ansible-playbook playbook.yml --tags httpd    >> to run perticular tags
+ansible-playbook playbook.yml --skip-tags httpd,user     >> to skip particular tags
+
+

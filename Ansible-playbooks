@@ -66,7 +66,7 @@ tasks:
         size: 4096
         state: present
 
-===============================
+=================================================
 #####copy ansible user public key from master to all target machines?
 ---
 - hosts: all
@@ -79,7 +79,7 @@ tasks:
         dest: /root/.ssh/authorized_keys
         mode: '0600'
       when: inventory_hostname in groups['test']
-==============================================
+================================================================
 #####change ownerships for /etc/ansible to ansible user in master
 ---
 - hosts: localhost

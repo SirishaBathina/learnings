@@ -1,0 +1,90 @@
+---
+- name: Create ansible user and set up password
+  hosts: all
+  become: yes
+  vars_files:
+    - vault.yml
+tasks:
+    - name: Ensure the ansible user is present
+      user:
+        name: ansible
+        password: "{{ ansible_user_password | password_hash('sha512') }}"
+        state: present
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Add ansible user to sudoers
+      copy:
+        dest: /etc/sudoers.d/ansible
+        content: |
+          ansible ALL=(ALL) NOPASSWD:ALL
+        mode: '0440'
+====================================================
+
+---
+- hosts: all
+  vars:
+    username: ansible_user   # Replace with the actual username
+  tasks:
+    - name: Provide sudo access
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers
+        backup: yes
+        regexp: '^{{ username }}'
+        line: '{{ username }} ALL=(ALL) NOPASSWD: ALL'
+        state: present
+      become: yes
+      become_user: root
+ - name: Create .ssh directory for {{ username }}
+      ansible.builtin.file:
+        path: /home/{{ username }}/.ssh
+        state: directory
+        mode: '0700'
+      become: yes
+      become_user: root 
+=========================================================
+---
+- name: Generate SSH keys for ansible user
+  hosts: localhost   # This assumes you are running this playbook locally on the control node
+tasks:
+    - name: Ensure SSH directory exists for ansible user
+      ansible.builtin.file:
+        path: /root/.ssh
+        state: directory
+        owner: ansible
+        group: ansible
+        mode: '0700'
+
+    - name: Generate SSH keypair for ansible user
+      ansible.builtin.openssh_keypair:
+        path: /root/.ssh/id_rsa
+        owner: ansible
+        group: ansible
+        size: 4096
+        state: present
+
+===============================
+---
+- hosts: all
+  vars:
+    username: siri       # Replace 'siri' with the actual username you want to use
+  tasks:
+    - name: Copy public key into remote servers
+      copy:
+        src: /home/{{ username }}/.ssh/id_rsa.pub
+        dest: /root/.ssh/authorized_keys
+        mode: '0600'
+      when: inventory_hostname in groups['test']
+==============================================
+
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Change ownership of /etc/ansible to ansible user
+      become_user: root
+      file:
+        path: /etc/ansible
+        owner: ansible
+        group: ansible
+        recurse: yes

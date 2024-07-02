@@ -1,3 +1,4 @@
+###create ansible user and password in machines?
 ---
 - name: Create ansible user and set up password
   hosts: all
@@ -20,6 +21,7 @@ tasks:
           ansible ALL=(ALL) NOPASSWD:ALL
         mode: '0440'
 ====================================================
+###provide sudo access to ansible user in all machines?
 
 ---
 - hosts: all
@@ -43,6 +45,7 @@ tasks:
       become: yes
       become_user: root 
 =========================================================
+####in master create keys for ansible user 
 ---
 - name: Generate SSH keys for ansible user
   hosts: localhost   # This assumes you are running this playbook locally on the control node
@@ -64,6 +67,7 @@ tasks:
         state: present
 
 ===============================
+#####copy ansible user public key from master to all target machines?
 ---
 - hosts: all
   vars:
@@ -76,7 +80,7 @@ tasks:
         mode: '0600'
       when: inventory_hostname in groups['test']
 ==============================================
-
+#####change ownerships for /etc/ansible to ansible user in master
 ---
 - hosts: localhost
   become: yes

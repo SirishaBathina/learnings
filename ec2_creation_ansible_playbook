@@ -1,0 +1,7 @@
+yum install ansible-core
+ansible-galaxy collection install amazon.aws
+ 
+sudo yum install python3-pip
+  pip3 install botocore
+ 
+   pip3 install boto3

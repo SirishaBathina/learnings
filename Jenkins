@@ -12,3 +12,18 @@ sudo yum install jenkins -y
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 sudo systemctl status jenkins
+###Install maven
+yum install maven
+mvn --version
+### Install tomcat
+cd /tmp/
+wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.90/bin/apache-tomcat-9.0.90.tar.gz
+tar -zvxf apache-tomcat-9.0.90.tar.gz
+cd apache-tomcat-9.0.90
+ls
+cd bin/
+chmod +x startup.sh
+chmod +x shutdown.sh
+
+# To start Tomcat
+./startup.sh

@@ -27,3 +27,26 @@ chmod +x shutdown.sh
 
 # To start Tomcat
 ./startup.sh
+
+After
+cd /path/to/tomcat/webapps/manager/META-INF/context.html
+value tag un comment
+( <!--
+--> )
+
+
+cd conf
+
+vi tomcat-users.xml
+
+#Add below lines between <tomcat-users> tag
+
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>   
+<user username="admin" password="admin" roles="manager-gui,manager-script,manager-jmx,manager-status"/>
+<user username="deployer" password="deployer" roles="manager-script"/>
+<user username="tomcat" password="s3cret" roles="manager-gui"/>
+
+http://server_ip:8080/

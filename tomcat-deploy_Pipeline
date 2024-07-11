@@ -1,0 +1,23 @@
+pipeline{
+    agent any
+    stages{
+        stage("git-clone"){
+            steps{
+                git credentialsId: 'git_credentials', url: 'https://github.com/SirishaBathina/hello-world.git'
+            }
+        }
+        stage("build-code"){
+            steps{
+                sh "mvn clean install"  
+                }
+        }
+       stage("delpoy-code"){
+            steps{
+                sshagent(['deploy_user']) {
+                sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@3.109.62.185:/tmp/apache-tomcat-9.0.90/webapps"
+                }   
+
+                } 
+    }
+       }
+}

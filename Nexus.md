@@ -1,6 +1,6 @@
 Install Java On Ubuntu
-sudo apt install openjdk-8-jdk
- java -version
+```sudo apt install openjdk-8-jdk
+ ```java -version
  sudo useradd -d /opt/nexus -s /bin/bash nexus
  sudo passwd nexus 
 ulimit -n 65536

@@ -1,4 +1,7 @@
-###Install Java On Ubuntu
+###Install Java On Ubuntu ## Nexus Port :8081 open the port
+```sh
+apt update
+```
 ```sh
 sudo apt install openjdk-8-jdk
  ```
@@ -76,3 +79,4 @@ sudo systemctl start nexus.service
 sudo systemctl status nexus.service
 ```
 ```
+In browser IP:8081 ====Nexus run on port  8081

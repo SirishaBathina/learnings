@@ -40,8 +40,11 @@ sudo nano /opt/nexus/bin/nexus.rc
 ```
 ```sh
 run_as_user="nexus"
-``` sudo nano /opt/nexus/bin/nexus.vmoptions
- -Xms1024m
+
+```sh
+ sudo nano /opt/nexus/bin/nexus.vmoptions
+ ```
+-Xms1024m
  -Xmx1024m 
 -XX:MaxDirectMemorySize=1024m
  ```sh

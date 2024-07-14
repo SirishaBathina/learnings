@@ -47,9 +47,11 @@ run_as_user="nexus"
 ```sh
  sudo nano /opt/nexus/bin/nexus.vmoptions
  ```
+#change accordingly
 -Xms1024m
  -Xmx1024m 
 -XX:MaxDirectMemorySize=1024m
+
  ```sh
 sudo nano /etc/systemd/system/nexus.service
 ```

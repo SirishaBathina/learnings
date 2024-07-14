@@ -43,7 +43,7 @@ sudo nano /opt/nexus/bin/nexus.rc
 ```
 ```sh
 run_as_user="nexus"
-
+```
 ```sh
  sudo nano /opt/nexus/bin/nexus.vmoptions
  ```

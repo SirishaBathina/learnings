@@ -1,4 +1,6 @@
- ```sh
+#SonarQube Installation on AmazoneLinux Sonar runs on port 9000
+Open port :9000
+```sh
 yum update
 ```
 ```sh

@@ -34,30 +34,30 @@ wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61
 chown -R sonar:sonar /opt/sonarqube-8.9.10.61524
 ```
 ```sh
-   chmod -R 775 /opt/sonarqube-8.9.10.61524
+chmod -R 775 /opt/sonarqube-8.9.10.61524
 ```
 ```sh
-    su sonar -
+su sonar -
 ```
-    cd sonarqube-8.9.10.61524/
+cd sonarqube-8.9.10.61524/
 ```sh
-     ls
-```
-```sh
-      cd bin/
+ls
 ```
 ```sh
+cd bin/
+```
+```sh
+ls
+```
+```sh
+cd linux-x86-64/
+```
       ls
+```sh
+./sonar.sh start
 ```
 ```sh
-      cd linux-x86-64/
-```
-      ls
-```sh
-      ./sonar.sh start
-```
-```sh
-     ./sonar.sh status
+./sonar.sh status
 ```
 Check ip:9000
 

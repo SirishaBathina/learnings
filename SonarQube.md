@@ -26,8 +26,11 @@ wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61
 ```
 ```sh
    sonar   ALL=(ALL)       ALL
-```   mv sonarqube-8.9.10.61524 /opt
-   ```sh
+```
+```sh
+  mv sonarqube-8.9.10.61524 /opt
+```
+```sh
 chown -R sonar:sonar /opt/sonarqube-8.9.10.61524
 ```
 ```sh

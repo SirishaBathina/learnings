@@ -1,4 +1,4 @@
-#SonarQube Installation on AmazoneLinux Sonar runs on port 9000
+#SonarQube Installation on AmazonLinux Sonar runs on port 9000
 Open port :9000
 ```sh
 yum update

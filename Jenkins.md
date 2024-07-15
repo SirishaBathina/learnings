@@ -1,5 +1,5 @@
-##### Installation on Amazon linux
-## Install Java first
+#####Installation on Amazon linux
+##Install Java first
 
 ```sh
 sudo yum install java-11-amazon-corretto-devel -y

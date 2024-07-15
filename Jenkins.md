@@ -28,4 +28,6 @@ sudo systemctl enable jenkins
 ```sh
 sudo systemctl start jenkins
 ```
-sudo systemctl status jenkins```
+```sh
+sudo systemctl status jenkins
+```

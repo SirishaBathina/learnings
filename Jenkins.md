@@ -41,4 +41,6 @@ sudo yum install java-11-amazon-corretto-devel -y
 ```sh
 wget -O jenkins.war https://get.jenkins.io/war/2.338/jenkins.war
 ```
-
+```sh
+java -jar jenkins.war
+```

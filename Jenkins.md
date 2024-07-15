@@ -31,3 +31,14 @@ sudo systemctl start jenkins
 ```sh
 sudo systemctl status jenkins
 ```
+
+*************************************************
+##Jenkins Installation method-2
+
+```sh
+sudo yum install java-11-amazon-corretto-devel -y
+```
+```sh
+wget -O jenkins.war https://get.jenkins.io/war/2.338/jenkins.war
+```
+

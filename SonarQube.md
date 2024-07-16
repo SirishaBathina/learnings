@@ -24,6 +24,7 @@ wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61
 ```sh
   vi /etc/sudoers
 ```
+#add below line and save the file
 ```sh
    sonar   ALL=(ALL)       ALL
 ```
@@ -36,7 +37,9 @@ chmod -R 775 /opt/sonarqube-8.9.10.61524
 ```sh
 su sonar -
 ```
+```sh
 cd sonarqube-8.9.10.61524/
+```
 ```sh
 ls
 ```

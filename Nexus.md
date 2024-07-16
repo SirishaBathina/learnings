@@ -20,6 +20,7 @@ ulimit -n 65536
 ```sh
  sudo nano /etc/security/limits.d/nexus.conf 
 ```
+#Add below line
 ```sh
 nexus - nofile 65536 
 ```
@@ -57,14 +58,18 @@ sudo nano /etc/systemd/system/nexus.service
 ```
 ```sh
  [Unit]
+
  Description=nexus Service
  After=network.target
- [Service] 
+ [Service]
+ 
 Type=forking
  LimitNOFILE=65536
  ExecStart=/opt/nexus/bin/nexus start
- ExecStop=/opt/nexus/bin/nexus stop User=nexus 
+ ExecStop=/opt/nexus/bin/nexus stop
+ User=nexus 
 Restart=on-abort
+
  [Install] 
 WantedBy=multi-user.target 
 ```

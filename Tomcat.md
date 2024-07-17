@@ -30,8 +30,7 @@ chmod +x startup.sh
 ```sh
 chmod +x shutdown.sh
 ```
-
-# To start Tomcat
+#To start Tomcat
 ```sh
 ./startup.sh
 ```
@@ -61,3 +60,7 @@ vi tomcat-users.xml
 <user username="tomcat" password="s3cret" roles="manager-gui"/>
 ```
 http://server_ip:8080/
+In case Change tomcat port number
+cd conf/
+server.xml
+change port Number accordingly and restart again

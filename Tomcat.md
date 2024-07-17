@@ -62,7 +62,8 @@ vi tomcat-users.xml
 <user username="tomcat" password="s3cret" roles="manager-gui"/>
 ```
 http://server_ip:8080/
-In case Change tomcat port number
+
+##In case Change tomcat port number
 ```sh
 cd conf/
 ```

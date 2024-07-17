@@ -1,4 +1,4 @@
-### Install java
+###Install java First
 ```sh
 sudo yum install java-11-amazon-corretto-devel -y
 ```
@@ -44,10 +44,12 @@ value tag un comment
 --> )
 
 
+```sh
 cd conf
-
+```
+```sh
 vi tomcat-users.xml
-
+```
 #Add below lines between <tomcat-users> tag
 ```sh
 

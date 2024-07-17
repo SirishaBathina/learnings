@@ -63,6 +63,10 @@ vi tomcat-users.xml
 ```
 http://server_ip:8080/
 In case Change tomcat port number
+```sh
 cd conf/
-server.xml
-change port Number accordingly and restart again
+```
+```sh
+vi server.xml
+```
+>>>>>change port Number accordingly and restart again

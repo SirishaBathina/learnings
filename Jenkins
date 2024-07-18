@@ -12,9 +12,11 @@ sudo yum install jenkins -y
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
 sudo systemctl status jenkins
+**************************************************************************
 ###Install maven
 yum install maven
 mvn --version
+**************************************************************************
 ### Install tomcat
 cd /tmp/
 wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.90/bin/apache-tomcat-9.0.90.tar.gz
@@ -50,3 +52,9 @@ vi tomcat-users.xml
 <user username="tomcat" password="s3cret" roles="manager-gui"/>
 
 http://server_ip:8080/
+*****************************************************************************************************************
+In Git hub=>select Project=>settings=>webhook=>add webhook=>(payload url)
+jenkinsUrl:8080/github-webhook/ =>application/json =>add this webhook
+In jenkins select =>github hook trigger
+
+

@@ -67,3 +67,12 @@ In jenkins select =>github hook trigger
     6  cd
     7  cd /var/lib/jenkins/workspace/sample/target/
     8  scp /var/lib/jenkins/workspace/sample/target/studentapp-2.5-SNAPSHOT.war root@3.110.173.120:/var/lib/tomcat/webapps
+
+
+
+slack
+
+https://jenkins-ftm3885.slack.com/services/B07D1H23E4B?added=1
+https://app.slack.com/client/T07D16P6JUB/C07CM3RMJTZ
+https://plugins.jenkins.io/slack/
+https://www.youtube.com/watch?v=zHXys5Hzbok

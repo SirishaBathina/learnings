@@ -57,4 +57,13 @@ In Git hub=>select Project=>settings=>webhook=>add webhook=>(payload url)
 jenkinsUrl:8080/github-webhook/ =>application/json =>add this webhook
 In jenkins select =>github hook trigger
 
-
+##war file to tomcat webapps folder
+   in jenkins user
+    1 ssh-keygen
+    2  cd /var/lib/jenkins/.ssh
+    3  ls
+    4  cat id_rsa.pub
+    5  ssh root@3.110.173.120 <tomcat ip>
+    6  cd
+    7  cd /var/lib/jenkins/workspace/sample/target/
+    8  scp /var/lib/jenkins/workspace/sample/target/studentapp-2.5-SNAPSHOT.war root@3.110.173.120:/var/lib/tomcat/webapps

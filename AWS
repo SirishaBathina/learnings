@@ -4,5 +4,8 @@ docker build -t demosiri .
 docker tag demosiri:latest 851725226757.dkr.ecr.ap-south-1.amazon.aws.com/demosiri:latest
 docker push  851725226757.dkr.ecr.ap-south-1.amazon.aws.com/demosiri:latest
 ***************************
-iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080
-iptables -t nat -A PREROUTING -p udp -m udp --dport 80 -j REDIRECT --to-ports 8080
+
+without port number just ip we can check in browser
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080 ==>jenkins 
+iptables -t nat -A PREROUTING -p udp -m udp --dport 80 -j REDIRECT --to-ports 8081 ==>nexus
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 9000 ===>sonarqube

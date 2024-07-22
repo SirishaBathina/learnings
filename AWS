@@ -1,1 +1,6 @@
+deploy ecs service by using ecrand docker
 aws ecr get-login-password --region ap-south-1| docker login --username AWS --password-stdin 851725226757.dkr.ecr.ap-south-1.amazon.aws.com
+docker build -t demosiri .
+docker tag demosiri:latest 851725226757.dkr.ecr.ap-south-1.amazon.aws.com/demosiri:latest
+
+docker push  851725226757.dkr.ecr.ap-south-1.amazon.aws.com/demosiri:latest

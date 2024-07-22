@@ -1,0 +1,5 @@
+##without port number just ip we can check in browser
+##configure Jenkins/sonar/nexus to access without port number
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080 ==>jenkins 
+iptables -t nat -A PREROUTING -p udp -m udp --dport 80 -j REDIRECT --to-ports 8081 ==>nexus
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 9000 ===>sonarqube

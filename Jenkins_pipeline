@@ -1,3 +1,5 @@
+#####Jenkins Declarative Pipeline with Docker####
+
 pipeline {
     agent  any
     environment{
@@ -30,6 +32,8 @@ pipeline {
 }
 
 *****************************************************************************************************************************************************
+####Integrate Docker with Jenkins Declarative Pipeline to deploy an Application######
+
 pipeline {
     agent any
     stages {
@@ -66,6 +70,7 @@ pipeline {
 }
 
 **********************************************************************************************************************************************************
+#### Build pipeline git,maven,sonar,nexus integration
 pipeline{
 agent any
 
@@ -106,3 +111,54 @@ nexusArtifactUploader artifacts: [[artifactId: 'studentapp', classifier: '', fil
 
 }
 }
+***********************************************************************************************************************************
+
+#####Building Docker Image using Jenkins Pipeline & Push it to AWS
+pipeline {
+    agent any
+    environment {
+        AWS_ACCOUNT_ID = "891377027963"
+        AWS_DEFAULT_REGION = "ap-south-1" 
+        IMAGE_REPO_NAME = "jenkins"
+        IMAGE_TAG = "latest"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    }
+    
+    stages {
+        stage('Logging into AWS ECR') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'aws-ecr-credentials', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                        sh '''
+                        aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Cloning Git') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-credentials', url: 'https://github.com/sd031/aws_codebuild_codedeploy_nodeJs_demo.git']]]) 
+            }
+        }
+        
+        stage('Building image') {
+            steps {
+                script {
+                    dockerImage = docker.build("${IMAGE_REPO_NAME}:${IMAGE_TAG}")
+                }
+            }
+        }
+        
+        stage('Pushing to ECR') {
+            steps {
+                script {
+                    sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
+                    sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
+                }
+            }
+        }
+    }
+}
+

@@ -115,3 +115,8 @@ docker login -u devopsbathinasirisha28 -p Sirisha@2024
 docker build -t devopsbathinasirisha28/dev-micro-services-admin:1.0 .
 docker push docker.io/devopsbathinasirisha28/dev-micro-services-admin:1.0
 docker pull <imagename>
+
+
+
+To login to dockerhubin cmdline
+echo "pwd" | docker login -u username --password-stdin

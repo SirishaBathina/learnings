@@ -64,3 +64,45 @@ pipeline {
         }
     }
 }
+
+**********************************************************************************************************************************************************
+pipeline{
+agent any
+
+
+triggers {
+  pollSCM '* * * * *'
+}
+
+
+stages{
+
+stage('git'){
+steps{
+checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'git_credentials', url: 'https://github.com/SirishaBathina/mavenrepo.git']])
+}
+}
+
+stage('build'){
+steps{
+sh 'mvn package'
+}
+}
+
+stage('sonar'){
+steps{
+withSonarQubeEnv('SonarQube') {
+sh 'mvn sonar:sonar'
+}
+}
+}
+
+stage('nexus'){
+steps{
+nexusArtifactUploader artifacts: [[artifactId: 'studentapp', classifier: '', file: '/var/lib/jenkins/workspace/Sample/target/studentapp-2.5-SNAPSHOT.war', type: 'war']], credentialsId: 'Nexus_credentials', groupId: 'com.jdevs', nexusUrl: '65.1.65.142:8081/', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '2.5-SNAPSHOT'
+}
+}
+
+
+}
+}

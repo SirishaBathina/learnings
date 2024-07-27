@@ -1,0 +1,30 @@
+pipeline {
+    agent  any
+    environment{
+        DOCKERHUB_CREDENTIALS =credentials('dockerhub_credentials')
+    }
+
+    stages {
+        stage('Code Checkout') {
+            steps {
+                git url: 'https://github.com/SirishaBathina/node-todo-cicd.git', branch: 'master' 
+            }
+        }
+        stage('Image Build') {
+            steps {
+                sh 'docker build . -t devopsbathinasirisha28/declarativepipeline:latest'
+            }
+        }
+        stage('Image Push') {
+            steps {
+               sh 'echo  $DOCKERHUB_CREDENTIALS_PSW |docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '
+                sh ' docker push devopsbathinasirisha28/declarativepipeline:latest'
+            }
+        }
+        stage('Application Deployment') {
+            steps {
+                sh "docker-compose down && docker-compose up -d"
+            }
+        }
+    }
+}

@@ -1,0 +1,111 @@
+provider "aws" {
+   region     = "us-east-1"
+   access_key = "AKIA47CRWBN5QJOL5OM7"
+   secret_key = "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"
+   alias = "east"
+}
+provider "aws" {
+   region     = "us-west-1"
+   alias = "west"
+}
+
+
+resource "aws_instance" "east_ec2" {
+  provider = aws.east
+  ami           = "ami-066784287e358dad1"   # Replace with your desired AMI ID
+  instance_type = "t2.micro"   # Replace with your desired instance type
+
+  tags = {
+    Name = "dev"
+  }
+}
+resource "aws_instance" "west_ec2" {
+  provider = aws.west
+  ami           = "ami-04fdea8e25817cd69"   # Replace with your desired AMI ID
+  instance_type = "t2.micro"    # Replace with your desired instance type
+
+  tags = {
+    Name = "test"
+  }
+
+}
+
+
+
+**********************************
+####Integrate Docker with Jenkins Declarative Pipeline to deploy an Application######
+
+pipeline {
+    agent any
+    stages {
+        stage('Clone the repo') {
+            steps {
+                echo 'Cloning the repository:'
+                git 'https://github.com/SirishaBathina/node-todo-cicd.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building the ToDo application on Docker'
+                sh 'docker build . -t todo-app'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application on Docker'
+                sh 'docker run -p 8000:8000 -d todo-app'
+            }
+        }
+    }
+}
+*****************************************************
+###sample playbook
+---
+- hosts: dev
+  tasks:
+  - name: install application
+    yum: name=httpd state=installed
+  - name: start the service
+    service: name=httpd state=started
+  - name: create a user
+    user: name=tulasi state=present
+  - name: create a file
+    file: name=/tmp/file1 state=touch
+************************************************************
+
+##### refer link https://youtu.be/G_UCeeb5EPc?si=ZLF8HKZjeJTHy1I-
+
+
+pipeline{
+    agent any
+    stages{
+        stage("git-clone"){
+            steps{
+                git credentialsId: 'git_credentials', url: 'https://github.com/SirishaBathina/hello-world.git'
+            }
+        }
+        stage("build-code"){
+            steps{
+                sh "mvn clean install"  
+                }
+        }
+       stage("delpoy-code"){
+            steps{
+                sshagent(['deploy_user']) {
+                sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@3.109.62.185:/tmp/apache-tomcat-9.0.90/webapps"
+                }   
+
+                } 
+    }
+       }
+}
+***************************************************************
+# Use the official Nginx image as the base image
+FROM nginx:latest
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY index.html  /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+***********************************************************************

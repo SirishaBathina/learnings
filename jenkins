@@ -1,0 +1,8 @@
+docker system prune -a  it will delete =>all stopped containers
+  - all networks not used by at least one container
+  - all images without at least one container associated to them
+  - all build cache
+
+
+docker images -f "dangling=true"    ==>to identify unused images list
+nohup ./myscript.sh &   run job when we close terminal

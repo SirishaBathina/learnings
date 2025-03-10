@@ -1,0 +1,691 @@
+Kind: Service, ServiceAccount, ingress, Deploymnet, ConfigMap, StorageClass, StatefulSet, HorizontalPodAutoscaler, PersistentVolume, PersistentVolumeClaim, PodDisruptionBudget,
+      Role, RoleBinding, ClusterRole, ClusterRoleBinding, DaemonSet,  certificate, ReplicaSet, Job, CronJob, EndpointSlice, Lease, NetworkPolicy, LimitRange, ResourceQuota
+pdb(pod distribution budget): A Pod Disruption Budget (PDB) allows you to limit the disruption to your application when its pods need to be rescheduled for some reason 
+                              such as upgrades or routine maintenance work on the Kubernetes nodes.
+hpa(HorizontalPodAutoscaler): A HorizontalPodAutoscaler (HPA for short) automatically updates a workload resource (such as a Deployment or StatefulSet), with the aim of 
+                              automatically scaling the workload to match demand.Horizontal scaling means that the response to increased load is to deploy more Pods. 
+                              This is different from vertical scaling, which for Kubernetes would mean assigning more resources (for example: memory or CPU) to the Pods that 
+                              are already running for the workload.
+nginx ingress controller:     A HorizontalPodAutoscaler (HPA for short) automatically updates a workload resource (such as a Deployment or StatefulSet), with the aim of 
+                              automatically scaling the workload to match demand.Horizontal scaling means that the response to increased load is to deploy more Pods. 
+                              This is different from vertical scaling, which for Kubernetes would mean assigning more resources (for example: memory or CPU) to the Pods 
+                              that are already running for the workload.
+nfs(network file sharing)(PersistentVolume)(PersistentVolumeClaim): is a request for storage by a user.It is similar to a Pod.
+                              Pods consume node resources and PVCs consume PV resources. Pods can request specific levels of resources (CPU and Memory).
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AWS-------EKS-------AWS-------EKS-------AWS-------EKS-------AWS-------EKS-------AWS-------EKS-------AWS-------EKS-------AWS-------EKS-------
+Prerequisites
+AWS CLI installed and configured (aws configure)
+kubectl installed
+eksctl (optional but helpful for EKS management)
+aws configure  <--Ensure you are logged into AWS
+aws configure --profile my-profile <--if using a specific profile
+aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>  <-- to update your kubeconfig with your EKS cluster ~/.kube/config
+eg:  aws eks update-kubeconfig --region us-west-2 --name my-cluster
+#below command adds the cluster configuration to ~/.kube/config
+aws eks update-kubeconfig --region us-west-2 --name my-cluster --profile my-profile   <--using a different AWS profile
+kubectl config get-contexts  <--List available contexts
+kubectl config current-context  <--Check the current context
+kubectl config use-context <CONTEXT_NAME> <--Switch to a different EKS cluster
+eg: kubectl config use-context arn:aws:eks:us-west-2:123456789:cluster/my-other-cluster
+kubectl config set-context --current --namespace=my-namespace <--By default,kubectl uses the default namespace. Set a preferred namespace for your cluster
+kubectl config view --minify | grep namespace  <--Verify the namespace
+---------------------------------------------------------------------------------------------------------
+aws eks update-kubeconfig  <--If you need to manage multiple EKS clusters, repeat aws eks update-kubeconfig for each cluster.
+export KUBECONFIG=~/.kube/config:/path/to/another-kubeconfig  <--Alternatively, you can merge multiple kubeconfig files
+kubectl cluster-info  <--Check cluster info
+kubectl get nodes   <--List nodes
+---------------------------------------------------------------------------------------------------------
+GCP-----GKE------GCP-----GKE------GCP-----GKE------GCP-----GKE------GCP-----GKE------GCP-----GKE------GCP-----GKE------GCP-----GKE------
+### (~/.kube/config) kubectl configuration to determine which Kubernetes cluster to deploy to.
+###if you have multiple projects follow below steps
+gcloud auth login   <--Ensure you are authenticated with GCP
+gcloud auth activate-service-account --key-file=<key-file.json>      <--using service account credentials
+gcloud container clusters get-credentials <CLUSTER_NAME> --region <REGION> --project <PROJECT_ID>   <--For each project and cluster, run
+eg: 
+gcloud container clusters get-credentials my-cluster-1 --region europe-west2 --project my-project-1
+gcloud container clusters get-credentials my-cluster-2 --region us-central1 --project my-project-2  <--This updates ~/.kube/config with the new cluster contexts
+kubectl config get-contexts    <---kubectl config get-contexts
+----------------------------------------------------------------------------------------------------------
+CURRENT   NAME                          CLUSTER            AUTHINFO            NAMESPACE
+*         gke_my-project-1_europe-west2_my-cluster-1  gke_my-project-1_europe-west2_my-cluster-1  my-user
+          gke_my-project-2_us-central1_my-cluster-2   gke_my-project-2_us-central1_my-cluster-2   my-user
+----------------------------------------------------------------------------------------------------------
+kubectl config use-context <context-name>    <--to switch to a different cluster
+kubectl config use-context gke_my-project-2_us-central1_my-cluster-2   <--Switch context
+#kubectl config current-context   <--can check your current cluster context
+kubectl config set-context --current --namespace=my-namespace <--By default, kubectl uses the default namespace. To set a preferred namespace for a context
+kubectl config view --minify | grep namespace   <--Verify the namespace
+----------------------------------------------------------------------------------------------------------
+#Instead of modifying ~/.kube/config, you can use separate kubeconfig files.
+export KUBECONFIG=/path/to/kubeconfig1         <--Set environment variable for a specific file
+kubectl config use-context gke_my-project-1_europe-west2_my-cluster-1
+export KUBECONFIG=~/.kube/config:/path/to/other/kubeconfig   <--Merge multiple kubeconfig files
+kubectl cluster-info   <--Check which cluster you’re connected to
+kubectl config current-context  <--Check active context
+
+
+kubectl run hello-node --image=hello-node:v1 --port=8080           <--kubectl means cube control
+kubectl describe pod
+kubectl delete pod hello-node
+## Test to ensure the version you installed is up-to-date:
+kubectl version --client
+kubectl version
+## By default, kubectl configuration is located at ~/.kube/config.Check that kubectl is properly configured by getting the cluster state:
+kubectl cluster-info
+kubectl get all          <--shows all the componets inside cluster
+kubectl get nodes        <--To list all the nodes in the cluster
+kubectl get pods --all-namespaces         <-- list all the pods running inside your cluster
+kubectl get pods --all-namespaces -o wide <--to check where it is running
+------------Namespace------------------------------------
+kubectl create –f namespace.yml --------->         command to create a namespace
+kubectl get namespace ----------------->           list all the available namespace.
+kubectl get namespace <Namespace name> ------->    get a particular namespace whose name is specified in the command
+kubectl describe namespace <Namespace name> ---->  describe the complete details about the service.
+kubectl delete namespace <Namespace name>------->  delete a particular namespace present in the cluster.
+---------------------------------------------------------
+kubectl create service nodeport nameOfservice(nginx) --tcp=80:80      <--name of service should be same as deploymnet
+kubectl get service
+kubectl create -h        <---help on creaing
+kubectl create deployment nginx-deploy --image=nginx
+kubectl get deployment
+kubectl expose deployment/my-nginx
+kubectl get pod  (or) kubectl get po        <--pod will be ready after deploymnet
+kubectl get pods -l app=nginx
+kubectl get replicaset   <--manages the replicas of a pod
+kubectl get rs           <--manages the replicas of a pod
+kubectl edit deployment nginx-deploy  <--you may edit version .. etc
+kubectl get replicaset
+kubectl logs podname                   <--get logs
+kubectl create deployment mongo-deploy --image=mongo
+kubectl create -f deploymnet.yaml
+kubectl describe pod podname            <--get aditional information
+kubectl exec -it podname -- /bin/bash   <--enter in to terminal for debugging
+exit                                    <--to exit from container
+kubectl get deployment                  <--check the name of deploymnet
+kubectl delete deployment nameofdeploymnet
+kubectl delete -f deployment.yml
+kubectl delete -f service.yml
+kubectl create deployment name image option1 option2 
+kubectl apply -f config-file.yml        <--apply the configuration
+kubectl describe service sevicename     <-- can see all service details like example port forwording..etc
+kubectl get svc my-nginx
+kubectl describe deployments
+kubectl get pod -o wide                 <--get internal ip details of container
+kubectl get deployment deploymnetname -o yaml > result.yml   <--can see etcd in yaml format
+echo -n 'username' | base64             <-- to encript username or password to keep in secret
+kubectl apply -f secret.yml
+kubectl get secret
+//kubectl delete deployments,svc my-nginx; kubectl create -f ./nginx-secure-app.yamL
+
+#Delete node from cluster.
+kubectl drain <node-name>
+kubectl drain <node-name> --ignore-daemonsets --delete-local-data
+kubectl delete node <node-name>
+kubeadm reset
+-------------------------
+kubeadm reset
+echo 1 > /proc/sys/net/ipv4/ip_forward    <--ip_forward content with 1
+kubeadm version
+kubeadm upgrade plan
+kubeadm upgrade apply v1.20.x
+
+kubeadm upgrade node
+kubeadm upgrade apply
+kubeadm certs check-expiration
+kubeadm certs renew apiserver --use-api &
+kubectl certificate approve kubeadm-cert-kube-apiserver-ld526
+systemctl daemon-reload
+systemctl restart kubelet
+---------Migration with node pools----------
+kubectl cordon <Node name>
+kubectl drain <Node nae> --force
+gcloud container node-pools delete default-pool
+--------
+kubectl taint nodes backup1=backups-only:NoSchedule
+---------------------------
+minikube start
+minikube status
+--------------------------
+
+Install kustomize
+sudo -i
+curl -s "https://raw.githubusercontent.com/\
+> kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+
+mv kustomize /usr/local/bin/kustomize
+
+uat only
+kustomize build kustomize/overlay/dev/uat | kubectl apply -f -
+pro only
+kustomize build kustomize/overlay/dev/pro | kubectl apply -f -
+
+* Note: By adding nfs to base, canary and default can no longer be deployed together. Deploy individually as above.
+kustomize build kustomize/overlay/dev | kubectl apply -f -
+------------------------------------------------------------------------------------------------------
+resource "kubernetes_config_map" "ai-gateway-config" {
+  metadata {
+    name      = "ai-gateway-config"
+    namespace = "api"
+  }
+
+  data = {
+    # Define your config key-value pairs here
+    "SPRING_PROFILES_ACTIVE" = "app10-b"
+  }
+}
+
+resource "kubernetes_deployment" "ai-gateway" {
+  metadata {
+    name      = "ai-gateway"
+    namespace = "api"
+  }
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "ai-gateway"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "ai-gateway"
+        }
+      }
+
+      spec {
+        container {
+          name              = "ai-gateway"
+          image             = "gcr.io/purplegrid/aigateway:app10-b"
+          image_pull_policy = "Always"
+          port {
+            container_port = 80
+          }
+          env {
+            # Inject config map data as environment variables
+            name = "SPRING_PROFILES_ACTIVE"
+            value_from {
+              config_map_key_ref {
+                name = "ai-gateway-config"
+                key  = "SPRING_PROFILES_ACTIVE"
+              }
+            }
+          }
+          resources {
+            limits = {
+              cpu    = "2"
+              memory = "8Gi"
+            }
+            requests = {
+              cpu    = "1"
+              memory = "6Gi"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+------------------------------------------------------------------------------------------
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ai-gatewaybackendconfig
+  namespace: api
+spec:
+  securityPolicy:
+    name: "allowtheseguysonly"
+  timeoutSec: 300
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 15
+    healthyThreshold: 1
+    unhealthyThreshold: 10
+    type: HTTP
+    requestPath: /aiservices/actuator/health
+-----------------------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-gateway-service
+  namespace: api
+  annotations:
+    cloud.google.com/backend-config: '{"default": "ai-gatewaybackendconfig"}'
+spec:
+  type: NodePort
+  selector:
+    app: ai-gateway
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+------------------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app10-b-external-lb
+  namespace: api
+  annotations:
+    #kubernetes.io/spec.ingressClassName: "gce"
+    kubernetes.io/ingress.allow-http: "true"
+    networking.gke.io/v1beta1.FrontendConfig: lb-frontend-config
+spec:
+  defaultBackend:
+    service:
+      name: jello-service
+      port:
+        number: 80
+  rules:
+  - http:
+      paths:
+      - path: /aigateway/*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: analytics-service
+            port:
+              number: 80
+---------------------------------------------------------------------------------------------------------------------------------
+Kubernetes Kind, along with their purpose:
+=================================================================================================================================
+Additional Kubernetes Kinds You Might Need
+Kind	          Purpose
+Service         Exposes a set of Pods as a network service
+                Types: ClusterIP (default) → Internal service within the cluster.
+                       NodePort → Exposes service on a node's static port.
+                       LoadBalancer → Uses a cloud provider’s external LB.
+ServiceAccount  Provides an identity to Pods for interacting with the API server
+Ingress         Manages external access to Services, provides HTTP/HTTPS routing.
+Deployment      Manages and maintains Pods with ReplicaSets.
+ConfigMap       Stores non-sensitive configuration data (e.g., environment variables, config files)
+StorageClass    Defines storage types (e.g., SSD, HDD) for PersistentVolumes.
+StatefulSet     Manages stateful applications (e.g., databases) ensuring stable identities and storage.
+HorizontalPodAutoscaler(HPA):     Automatically scales Pods based on CPU or memory usage.
+PersistentVolume(PV):             Provides a persistent storage resource.
+PersistentVolumeClaim(PVC):       Requests storage from a PersistentVolume.
+PodDisruptionBudget(PDB):         Ensures availability during voluntary disruptions.
+Role & RoleBinding:               Grants permissions within a specific namespace.
+ClusterRole & ClusterRoleBinding: Grants cluster-wide permissions.
+DaemonSet       Ensures one Pod runs on every node.
+Certificate     Manages TLS certificates for secure communication.
+ExternalName    Maps to an external DNS name.
+ReplicaSet	    Ensures a specific number of Pod replicas are running.
+Job	          Runs a one-time task to completion.
+CronJob	    chedules recurring Jobs like a cron job.
+EndpointSlice   Improves service discovery and load balancing (replaces Endpoints).
+Lease	          Helps coordinate leader election between Pods.
+NetworkPolicy   Controls inbound and outbound traffic for Pods.
+LimitRange	    Sets default CPU/memory limits per namespace.
+ResourceQuota   Restricts resource consumption per namespace.
+----------------------------------------------------------------------------------------------
+1️⃣ Service
+Purpose: Exposes a set of Pods as a network service.
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: myapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP  # Options: ClusterIP, NodePort, LoadBalancer
+2️⃣ ServiceAccount
+Purpose: Grants permissions to Pods to interact with the Kubernetes API.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: myapp-sa
+3️⃣ Ingress
+Purpose: Manages external HTTP/S access to Services.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+spec:
+  rules:
+    - host: myapp.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myapp-service
+                port:
+                  number: 80
+4️⃣ Deployment
+Purpose: Manages Pods and ReplicaSets for stateless applications.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp-container
+          image: nginx
+          ports:
+            - containerPort: 80
+5️⃣ ConfigMap
+Purpose: Stores non-sensitive configuration data.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+data:
+  app.env: "production"
+  log.level: "info"
+6️⃣ StorageClass
+Purpose: Defines storage parameters for dynamic volume provisioning.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-storage
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+7️⃣ StatefulSet
+Purpose: Manages stateful applications (e.g., databases).
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: myapp-db
+spec:
+  selector:
+    matchLabels:
+      app: myapp-db
+  serviceName: "myapp-db-service"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: myapp-db
+    spec:
+      containers:
+        - name: db
+          image: mysql:5.7
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "password"
+8️⃣ HorizontalPodAutoscaler (HPA)
+Purpose: Automatically scales Pods based on CPU/memory usage.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+9️⃣ PersistentVolume (PV)
+Purpose: Represents a physical storage resource.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: myapp-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: fast-storage
+  hostPath:
+    path: "/mnt/data"
+🔟 PersistentVolumeClaim (PVC)
+Purpose: Requests storage from a PersistentVolume.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myapp-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: fast-storage
+1️⃣1️⃣ PodDisruptionBudget (PDB)
+Purpose: Ensures a minimum number of Pods remain available during disruptions.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myapp-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: myapp
+1️⃣2️⃣ Role
+Purpose: Grants permissions within a specific namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: myapp-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+1️⃣3️⃣ RoleBinding
+Purpose: Binds a Role to a user/service account.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: myapp-rolebinding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: myapp-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: myapp-role
+  apiGroup: rbac.authorization.k8s.io
+1️⃣4️⃣ ClusterRole
+Purpose: Grants permissions across all namespaces.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: myapp-clusterrole
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+1️⃣5️⃣ ClusterRoleBinding
+Purpose: Binds a ClusterRole to a user/service account.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: myapp-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: myapp-sa
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: myapp-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+1️⃣6️⃣ DaemonSet
+Purpose: Ensures a Pod runs on every Node.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: myapp-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp-container
+          image: busybox
+          command: ["/bin/sh", "-c", "while true; do echo Hello; sleep 10; done"]
+1️⃣7️⃣ Certificate (Using Cert-Manager)
+Purpose: Manages SSL/TLS certificates in Kubernetes.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: myapp-cert
+spec:
+  secretName: myapp-tls-secret
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - myapp.example.com
+
+1️⃣8️⃣  ReplicaSet
+Purpose: Ensures a specific number of identical Pods are running.
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp-container
+          image: nginx
+          ports:
+            - containerPort: 80
+1️⃣9️⃣  Job
+Purpose: Runs a one-time task until completion.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myapp-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: myapp-container
+          image: busybox
+          command: ["echo", "Hello, Kubernetes!"]
+      restartPolicy: Never
+2️⃣1️⃣ CronJob
+Purpose: Runs Jobs on a schedule (like a cron job).
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: myapp-cronjob
+spec:
+  schedule: "*/5 * * * *"  # Runs every 5 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: myapp-container
+              image: busybox
+              command: ["echo", "Scheduled Task Executed"]
+          restartPolicy: OnFailure
+2️⃣4️⃣ EndpointSlice
+Purpose: Improves service discovery and load balancing (replaces Endpoints).
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: myapp-endpointslice
+  labels:
+    kubernetes.io/service-name: myapp-service
+addressType: IPv4
+endpoints:
+  - addresses:
+      - 192.168.1.10
+ports:
+  - name: http
+    port: 80
+    protocol: TCP
+2️⃣5️⃣ Lease
+Purpose: Used for leader election in distributed systems.
+apiVersion: coordination.k8s.io/v1
+kind: Lease
+metadata:
+  name: myapp-lease
+  namespace: default
+spec:
+  holderIdentity: "leader-1"
+  leaseDurationSeconds: 30
+2️⃣6️⃣ NetworkPolicy
+Purpose: Controls inbound and outbound traffic for Pods.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-http
+spec:
+  podSelector:
+    matchLabels:
+      app: myapp
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 192.168.1.0/24
+      ports:
+        - protocol: TCP
+          port: 80
+2️⃣7️⃣ LimitRange
+Purpose: Sets default CPU/memory limits per namespace.
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: resource-limits
+spec:
+  limits:
+    - default:
+        cpu: "500m"
+        memory: "512Mi"
+      defaultRequest:
+        cpu: "250m"
+        memory: "256Mi"
+      type: Container
+2️⃣8️⃣ ResourceQuota
+Purpose: Restricts resource consumption per namespace.
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "2"
+    requests.memory: "4Gi"
+    limits.cpu: "4"
+    limits.memory: "8Gi"
+-------------------------------------------------------------------------------------------------------------

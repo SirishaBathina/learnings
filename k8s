@@ -199,7 +199,7 @@ resource "kubernetes_deployment" "ai-gateway" {
       spec {
         container {
           name              = "ai-gateway"
-          image             = "gcr.io/purplegrid/aigateway:app10-b"
+          image             = "gcr.io/"
           image_pull_policy = "Always"
           port {
             container_port = 80
@@ -210,7 +210,7 @@ resource "kubernetes_deployment" "ai-gateway" {
             value_from {
               config_map_key_ref {
                 name = "ai-gateway-config"
-                key  = "SPRING_PROFILES_ACTIVE"
+                key  = ""
               }
             }
           }

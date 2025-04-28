@@ -2,6 +2,24 @@ Creating Nested Folders:
 mkdir -p A/B/C/D/E
 
 
+in ubuntu
+
+sudo -i
+mkdir -p /home/sirisha/.ssh
+nano /home/sirisha/.ssh/authorized_keys   # (paste public key)
+chown -R sirisha:sirisha /home/sirisha/.ssh
+chmod 700 /home/sirisha/.ssh
+chmod 600 /home/sirisha/.ssh/authorized_keys
+sudo systemctl restart ssh
+
+ssh-keygen -t rsa
+
+vi /etc/sudoers
+ sirisha    ALL=(ALL)       NOPASSWD: ALL
+vi /etc/ssh/sshd_config
+passward auth yes
+
+
 * pub key put into another server procees-2
 vi Test_key.pem
      chmod 400 Test_key.pem

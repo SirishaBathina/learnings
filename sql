@@ -27,3 +27,12 @@ wget https://repo.mysql.com/yum/mysql-8.0-community/el/9/x86_64/mysql-com       
    58  SHOW DATABASES;
    59  history
    60   mysql -u root -p
+
+
+
+
+
+script.sh
+for f in *.sql; do
+  mysql -u root -pADJLmu-KHvZ9Y mondeecms_mondee < "$f"
+done

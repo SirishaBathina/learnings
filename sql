@@ -1,9 +1,15 @@
+created a server in OCloud
+   sudo su - 
+   In=> visudo 
+added user siri
+sudo su - siri
+ To install mysql on oracle linux  
 wget https://repo.mysql.com/yum/mysql-8.0-community/el/9/x86_64/mysql-com                                                                             munity-icu-data-files-8.0.40-1.el9.x86_64.rpm
    39  sudo dnf install ./*.rpm --nogpgcheck -y
    40  sudo systemctl enable mysqld
    41  sudo systemctl start mysqld
    42  sudo systemctl status mysqld
-   43  sudo grep 'ADJLmu-KHvZ9Y' /var/log/mysqld.log
+   43  sudo grep 'paswd' /var/log/mysqld.log
    44  mysql -u root -p
    45  cat /var/log/mysqld.log
    46  sudo cat /var/log/mysqld.log

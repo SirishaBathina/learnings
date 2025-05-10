@@ -1,0 +1,68 @@
+#!/bin/bash
+
+PROJECT_ID="abc"
+REGION="gcr.io"
+REPO="${REGION}/${PROJECT_ID}"
+OUTPUT_CSV="vulnerabilities_all.csv"
+
+# CSV Header
+echo "Image,Tag,CVE ID,Severity,CVSS Score,Fix Available,Package,Version,Fixed Version,Package Type,VEX Status,More Info URL" > "$OUTPUT_CSV"
+
+# Get all image names in the repository
+IMAGES=$(gcloud container images list --repository="$REPO" --format="value(NAME)")
+
+for IMAGE in $IMAGES; do
+  echo "Processing image: $IMAGE"
+
+  # Get the latest tag by timestamp
+  LATEST_TAG=$(gcloud container images list-tags "$IMAGE" \
+      --limit=1 \
+      --sort-by=~TIMESTAMP \
+      --format="value(TAGS)" | cut -d ',' -f 1)
+
+  if [[ -z "$LATEST_TAG" ]]; then
+    echo "No tags found for $IMAGE, skipping..."
+    continue
+  fi
+
+  FULL_IMAGE="${IMAGE}:${LATEST_TAG}"
+  echo "Fetching vulnerabilities for $FULL_IMAGE"
+
+  # Describe and extract vulnerability info
+  gcloud beta container images describe "$FULL_IMAGE" \
+      --show-package-vulnerability \
+      --format=json > temp_vuln.json 2>/dev/null
+
+  if [[ ! -s temp_vuln.json ]]; then
+    echo "No vulnerability data for $FULL_IMAGE, skipping..."
+    continue
+  fi
+
+  # Append vulnerabilities to CSV
+  jq -r --arg image "$IMAGE" --arg tag "$LATEST_TAG" '
+.package_vulnerability_summary.vulnerabilities.HIGH[]? |
+  .vulnerability.packageIssue[]? as $pkg |
+  [
+    $image,
+    $tag,
+    (.noteName | split("/")[-1] // "N/A"),
+    .vulnerability.effectiveSeverity,
+    (.vulnerability.cvssScore // .vulnerability.cvssv3.baseScore // "N/A"),
+    ($pkg.fixAvailable),
+    $pkg.affectedPackage,
+    $pkg.affectedVersion.name,
+    ($pkg.fixedVersion.name // "N/A"),
+    $pkg.packageType,
+    (.vulnerability.vexAssessment.assessment // "N/A"),
+    (.vulnerability.relatedUrls[0].url // "N/A")
+  ] | @csv
+' temp_vuln.json >> "$OUTPUT_CSV"
+done
+
+# Cleanup
+rm -f temp_vuln.json
+
+echo "Vulnerability report generated at: $OUTPUT_CSV"
+
+
+rm -f temp_vuln.json

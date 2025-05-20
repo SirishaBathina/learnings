@@ -1,0 +1,6 @@
+for suppose i have docker image in my local 
+
+gcloud auth login
+gcloud config set project [PROJECT_ID]
+docker tag jello:latest gcr.io/purplegrid/github.com/purplegridsinc/jello:latest
+docker push gcr.io/purplegrid/github.com/purplegridsinc/jello:latest

@@ -1,0 +1,54 @@
+####script to get all configmap in the namespace
+
+
+$namespace = "api"
+
+# Get all ConfigMap names in the 'api' namespace
+$configmaps = kubectl get configmap -n $namespace -o jsonpath='{.items[*].metadata.name}'
+$configmaps = $configmaps -split ' '
+
+# Create output folder if it doesn't exist
+New-Item -ItemType Directory -Force -Path ".\configmaps" | Out-Null
+
+# Loop through each ConfigMap and export it as a YAML file
+foreach ($cm in $configmaps) {
+    $fileName = ".\configmaps\${cm}.yaml"
+    kubectl get configmap $cm -n $namespace -o yaml | Out-File -Encoding utf8 $fileName
+}
+
+
+####script to get all deployments in the namespace
+
+$namespace = "api"
+
+# Get all deployment names in the 'api' namespace
+$deployments = kubectl get deploy -n $namespace -o jsonpath='{.items[*].metadata.name}'
+$deployments = $deployments -split ' '
+
+# Create output folder if it doesn't exist
+New-Item -ItemType Directory -Force -Path ".\deployments" | Out-Null
+
+# Loop through each deployment and export it as a YAML file
+foreach ($deploy in $deployments) {
+    $fileName = ".\deployments\${deploy}.yaml"
+    kubectl get deploy $deploy -n $namespace -o yaml | Out-File -Encoding utf8 $fileName
+}
+
+#####script to get all deployments in the namespace
+
+$namespace = "api"
+
+# Get all service names in the 'api' namespace
+$services = kubectl get svc -n $namespace -o jsonpath='{.items[*].metadata.name}'
+$services = $services -split ' '
+
+# Create output folder if it doesn't exist
+New-Item -ItemType Directory -Force -Path ".\services" | Out-Null
+
+# Loop through each service and export it as a YAML file
+foreach ($svc in $services) {
+    $fileName = ".\services\${svc}.yaml"
+    kubectl get svc $svc -n $namespace -o yaml | Out-File -Encoding utf8 $fileName
+}
+
+

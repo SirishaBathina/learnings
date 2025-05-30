@@ -1,0 +1,28 @@
+#Create a new partition using fdisk
+sudo fdisk /dev/sda
+#Reboot to load the new partition
+sudo reboot
+#Format the new partition
+sudo mkfs.ext4 /dev/sda2
+#Create a mount point inside Jenkins directory
+sudo mkdir /var/lib/jenkins/data
+#Mount the new partition temporarily
+sudo mount /dev/sda2 /var/lib/jenkins/data
+#Move heavy directories into the new mount
+#Stop Jenkins first:
+sudo systemctl stop jenkins
+sudo mv /var/lib/jenkins/jobs /var/lib/jenkins/data/
+sudo mv /var/lib/jenkins/workspace /var/lib/jenkins/data/
+
+#Create symlinks to maintain Jenkins paths
+sudo ln -s /var/lib/jenkins/data/jobs /var/lib/jenkins/jobs
+sudo ln -s /var/lib/jenkins/data/workspace /var/lib/jenkins/workspace
+#Mount it permanently in /etc/fstab
+#Get UUID:
+sudo blkid /dev/sda2
+#Add line to /etc/fstab (replace <UUID> with actual UUID):
+UUID=<UUID> /var/lib/jenkins/data ext4 defaults 0 2
+##Start Jenkins and verify
+sudo systemctl start jenkins
+df -h /var/lib/jenkins/data
+ls -l /var/lib/jenkins

@@ -1,0 +1,111 @@
+tep 1: Export the AMI from AWS
+You need to export the AMI to an S3 bucket as a VM image (usually OVA or VMDK format).
+Make sure your AMI is eligible for export:
+It must be an EC2 instance backed by an EBS snapshot.
+It must use a supported OS (like RHEL, CentOS, Ubuntu, etc.).
+Create an S3 bucket in AWS and configure it for export (same region as the AMI).
+
+
+
+
+
+Export the AMI using AWS CLI
+aws ec2 export-image \
+  --image-id ami-0e885a7f61d6d9336 \
+  --disk-image-format VMDK \
+  --s3-export-location S3Bucket=app30-b,S3Prefix=exports/
+
+
+
+
+aws ec2 create-store-image-task \
+    --image-id AMI_ID \
+    --bucket BUCKET_NAME
+
+
+Wait for the export to complete (can take time depending on the image size).
+Step 2: Download the Exported Image from S3
+Download the exported VMDK or OVA file to your local system or to a compute instance in OCI.
+You can also use aws s3 cp to transfer it to your OCI instance:
+aws s3 cp s3://my-export-bucket/exports/my-image.vmdk .
+Step 3: Upload the Image to OCI Object Storage
+Create a bucket in OCI Object Storage (in the same region where you want to import the image).
+Use OCI CLI or Console to upload the image:
+oci os object put --bucket-name my-oci-bucket --name my-image.vmdk --file my-image.vmdk
+Step 4: Import the Image into OCI as a Custom Image
+Now that the image is in OCI Object Storage:
+oci compute image import from-object-uri \
+  --uri https://objectstorage.<region>.oraclecloud.com/n/<namespace>/b/<bucket-name>/o/my-image.vmdk \
+  --display-name "my-imported-image" \
+  --source-image-type VMDK \
+  --compartment-id <compartment_ocid>
+
+
+-----------------------------------------------------------------------------------------------------
+##rclone config
+##rclone copy aws:app30-b oci:app30-b --progress
+
+
+ Step 1: Verify Fingerprint of Current Key
+Run this on your machine:
+openssl rsa -pubout -outform DER -in /home/ubuntu/.oci/oci_api_key.pem 2>/dev/null | openssl md5 -c
+Output should be:
+
+(stdin)= 56:22:f6:a8:25:31:dc:b7:37:bc:10:bd:57:f9:07:42
+🔧 Step 2: Confirm This Fingerprint Exists in OCI Console
+Login to OCI Console.
+
+Go to: Identity → Users → Your User → API Keys.
+
+Confirm:
+
+The fingerprint shown matches the one from the previous command.
+
+If not, your CLI is using the wrong key.
+
+If the key is missing in the Console:
+
+➕ Upload the Public Key
+openssl rsa -in ~/.oci/oci_api_key.pem -pubout > ~/.oci/oci_api_key_public.pem
+Then upload the oci_api_key_public.pem in the Console under your user’s API Keys section.
+
+🔧 Step 3: Double-Check ~/.oci/config
+Your oci CLI reads credentials from ~/.oci/config. Check that it includes this block (adjust as needed):
+
+
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaah7q7lqpg36oadartx7k5xoocoxgzig5o777jihbszons22btzmzq
+fingerprint=56:22:f6:a8:25:31:dc:b7:37:bc:10:bd:57:f9:07:42
+key_file=/home/ubuntu/.oci/oci_api_key.pem
+tenancy=ocid1.tenancy.oc1..aaaaaaaaxfvfcdywxipwxk2bchautjob5lw7s6l3bjg47gvvw4cryif5bs2q
+region=us-ashburn-1
+Make sure there are no extra spaces or formatting issues.
+
+🔧 Step 4: Test the OCI CLI Again
+bash
+Copy
+Edit
+oci os ns get
+If that fails, authentication is still broken.
+
+🔧 Step 5: (Optional) Regenerate a New Key and Start Fresh
+If you're stuck, the fastest fix is often to:
+
+Delete the broken API key in the OCI Console.
+
+Generate a new one:
+
+mkdir -p ~/.oci
+openssl genrsa -out ~/.oci/oci_api_key.pem 2048
+openssl rsa -pubout -in ~/.oci/oci_api_key.pem -out ~/.oci/oci_api_key_public.pem
+chmod 600 ~/.oci/oci_api_key.pem
+Upload oci_api_key_public.pem to your OCI user under API Keys.
+
+Update ~/.oci/config with the new fingerprint (visible after upload).
+
+Run again:
+oci os ns get
+
+✅ Once CLI Works → rclone Will Work Too
+After fixing CLI auth, re-run:
+rclone ls oci:app30-b

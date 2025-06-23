@@ -1,0 +1,32 @@
+from cloudflare 
+
+i got this keys
+
+curl "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+     -H "Authorization: Bearer vkGjaXZh--mNz2_nNQOEKuewW2bboLEFHsMItmmE"
+
+vkGjaXZh--mNz2_nNQOEKuewW2bboLEFHsMItmmE
+===============
+
+In server
+sudo apt update
+sudo apt install certbot python3-certbot-dns-cloudflare -y
+
+
+upload the api key
+sudo chmod 600 /etc/letsencrypt/cloudflare.ini
+
+
+vi /etc/letsencrypt/cloudflar.ini
+
+
+ paste this above path
+
+dns_cloudflare_api_token = vkGjaXZh--mNz2_nNQOEKuewW2bboLEFHsMItmmE
+
+run this cmd
+
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \
+  -d "*.purplecloud.ai" -d "purplecloud.ai"

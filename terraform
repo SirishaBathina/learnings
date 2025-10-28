@@ -1,3 +1,64 @@
 terraform apply -target=kubernetes_config_map.miraee-enrollment-python_config
 terraform apply -target=kubernetes_deployment.miraee-enrollment-python
 terraform apply -target=kubernetes_service.miraee-enrollment-python_service
+
+
+
+# Step 3a: Plan/apply the config map first
+terraform plan -target=kubernetes_config_map.miraee-tyk-gateway_config
+terraform apply -target=kubernetes_config_map.miraee-enrollment-python_config
+
+# Step 3b: Plan/apply the deployment
+terraform plan -target=kubernetes_deployment.miraee-tyk-gateway
+terraform apply -target=kubernetes_deployment.miraee-enrollment-python
+
+# Step 3c: Plan/apply the service
+terraform plan -target=kubernetes_service.miraee-tyk-gateway_service
+terraform apply -target=kubernetes_service.miraee-enrollment-python_service
+
+# Step 3a: Plan/apply the config map first
+terraform plan -target=kubernetes_config_map.miraee-tyk-gateway-auth-service_config
+terraform apply -target=kubernetes_config_map.miraee-tyk-gateway-auth-service_config
+
+# Step 3b: Plan/apply the deployment
+terraform plan -target=kubernetes_deployment.miraee-tyk-gateway-auth-service
+terraform apply -target=kubernetes_deployment.miraee-tyk-gateway-auth-service
+
+# Step 3c: Plan/apply the service
+terraform plan -target=kubernetes_service.mirai-adk-chatbot_service
+terraform apply -target=kubernetes_service.mirai-adk-chatbot_service
+
+
+
+
+terraform destroy -target=kubernetes_deployment.adk-chatbot
+
+
+terraform import kubernetes_deployment.adk-chatbot api/adk-chatbot
+
+
+terraform apply -target=kubernetes_config_map.miraee-enrollment-python
+terraform apply -target=kubernetes_deployment.miraee-enrollment-python
+terraform apply -target=kubernetes_service.miraee-enrollment-python
+
+
+
+
+terraform apply -target=kubernetes_config_map.mirai-enrollment
+terraform apply -target=kubernetes_deployment.orchestrator-flowbot
+
+terraform apply -target=kubernetes_service.reel-builder_service
+
+terraform apply -target=kubernetes_deployment.mirai-mcp
+
+terraform apply -target=kubernetes_service.google-adk-ui_service
+
+terraform apply -target=kubernetes_deployment.reel-builder
+
+
+
+
+
+
+
+

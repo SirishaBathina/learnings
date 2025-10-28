@@ -1,0 +1,3 @@
+terraform apply -target=kubernetes_config_map.miraee-enrollment-python_config
+terraform apply -target=kubernetes_deployment.miraee-enrollment-python
+terraform apply -target=kubernetes_service.miraee-enrollment-python_service

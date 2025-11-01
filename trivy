@@ -1,0 +1,12 @@
+# 1️⃣ Install prerequisites
+sudo dnf install -y dnf-plugins-core
+
+# 2️⃣ Add the official Trivy repository
+sudo dnf config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/releases/$(rpm --eval "%{rhel}")/x86_64/
+
+# 3️⃣ Install Trivy
+sudo dnf install -y trivy
+
+# 4️⃣ Verify installation
+trivy --version
+sudo rpm --import https://aquasecurity.github.io/trivy-repo/rpm/public.key

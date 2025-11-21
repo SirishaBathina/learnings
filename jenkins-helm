@@ -6,7 +6,6 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 helm version
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
-kubectl create namespace jenkins
 kubectl get ns
 helm install my-jenkins jenkins/jenkins -n jenkins
 printf $(kubectl get secret --namespace jenkins my-jenkins \

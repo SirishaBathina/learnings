@@ -1,0 +1,20 @@
+In k8 cluster 
+
+
+kubectl create namespace jenkins
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm version
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
+kubectl create namespace jenkins
+kubectl get ns
+helm install my-jenkins jenkins/jenkins -n jenkins
+printf $(kubectl get secret --namespace jenkins my-jenkins \
+  -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode); echo
+kubectl --namespace jenkins port-forward svc/my-jenkins 8080:8080
+kubectl get pods -n jenkins -o wide
+kubectl --namespace jenkins port-forward svc/my-jenkins 8080:8080
+kubectl get pods -n jenkins -o wide
+kubectl get pods -n jenkins -o wide
+kubectl patch svc my-jenkins -n jenkins -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl get svc -n jenkins

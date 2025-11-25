@@ -1,0 +1,44 @@
+java -version
+cd /opt
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.4.87374.zip
+sudo unzip sonarqube-9.9.4.87374.zip
+sudo mv sonarqube-9.9.4.87374 sonarqube
+sudo chown -R opc:opc /opt/sonarqube
+sudo yum install postgresql-server postgresql-contrib -y
+sudo postgresql-setup --initdb
+sudo systemctl enable --now postgresql
+sudo -u postgres psql
+ CREATE DATABASE sonarqube;
+CREATE USER sonar WITH ENCRYPTED PASSWORD 'Sonar@123';
+GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonar;
+\q
+sudo nano /var/lib/pgsql/data/pg_hba.conf
+local   all             all                                     md5
+host    all             all             127.0.0.1/32            md5
+host    all             all             ::1/128                 md5
+local   replication     all                                     md5
+sudo systemctl restart postgresql
+psql -h localhost -U sonar -d sonarqube
+sudo nano /opt/sonarqube/conf/sonar.properties
+sonar.jdbc.username=sonar
+sonar.jdbc.password=Sonar@123
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+sudo nano /etc/systemd/system/sonarqube.service
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+User=opc
+Group=opc
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+LimitNOFILE=65536
+LimitNPROC=4096
+LimitAS=infinity
+
+[Install]
+WantedBy=multi-user.target
+sudo systemctl daemon-reload
+sudo systemctl enable --now sonarqube

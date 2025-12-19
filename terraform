@@ -57,6 +57,34 @@ terraform apply -target=kubernetes_deployment.reel-builder
 
 
 
+terraform fmt ===>to format 
+
+terraform fmt -recursive  ===>it will format from root module
+
+==>A Terraform workspace is a way to manage multiple state files using the same Terraform code.
+
+#Same Terraform code
+#Different .tfstate files
+
+####tocreate workspace  
+
+terraform workspace new dev
+terraform workspace new prod
+
+
+####list workspaces
+
+terraform workspace list
+###Switch workspace
+
+terraform workspace select dev
+###Check current workspace
+terraform workspace show
+
+
+
+
+
 
 
 

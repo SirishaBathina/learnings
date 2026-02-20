@@ -1,0 +1,32 @@
+Chart.yaml===> (chart metadata)
+Values.yaml (default configuration)
+_helpers.tpl (reusable logic)
+a place to define reusable template helpers so you don’t repeat the same logic everywhere.
+
+Think of it like functions + constants for Helm template
+so you don’t repeat the same YAML again and again.
+
+_helpers.tpl is a place to define reusable template logic that is used by other Helm YAML files.
+
+
+rolloutSratergy:
+  blueGreen:
+    enabled: true
+    autoPromotionEnabled: true
+    autoPromotionSeconds: 30
+    scaleDownDelaySeconds: 30
+
+enabled: true
+Helm will create a Rollout resource
+➡ Helm will NOT create a Deployment
+
+autoPromotionEnabled: true
+After new version is ready in preview service
+➡ Argo Rollouts will automatically promote it
+
+autoPromotionSeconds: 30
+Wait 30 seconds after preview pods are healthy
+➡ Then switch traffic to new version
+
+scaleDownDelaySeconds: 30
+Old (blue) ReplicaSet is kept alive for 30 seconds

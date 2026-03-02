@@ -1,0 +1,26 @@
+RabbitMQ is a message broker.
+
+◾ Producers publish messages to exchanges.
+◾ Exchanges route messages to queues using routing rules.
+◾ Messages are pushed to consumers.
+◾ Once acknowledged, messages are deleted.
+
+
+
+
+ What Kafka Really Is
+
+Kafka is a distributed event log.
+
+◾ Producers append events to partitions.
+◾ Messages remain based on retention policy, not consumption.
+◾ Consumers pull messages and track progress using offsets.
+◾ Events can be rewound, replayed, and reprocessed.
+
+Built for high-throughput event streaming where many consumers read the same data independently.
+
+
+Tool	Best for
+RabbitMQ-	Task queues, async jobs, request–reply
+Redis Streams-	Lightweight streaming, fast processing
+Apache Kafka-	Event streaming, analytics, high scale

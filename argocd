@@ -1,8 +1,8 @@
  kubectl config use-context 
- 1004  argocd cluster list
- 1005  argocd cluster add context-cspc5vpkeua
- 1006  argocd cluster list
- 1007  argocd login 129.159.92.2 --insecure
- 1008  argocd cluster list
- 1009  argocd cluster add context-cspc5vpkeua###
- 1010  argocd cluster list
+   argocd cluster list
+   argocd cluster add context-cspc5vpkeua
+   argocd cluster list
+   argocd login 129.159.92.2 --insecure
+   argocd cluster list
+   argocd cluster add context-cspc5vpkeua###
+   argocd cluster list

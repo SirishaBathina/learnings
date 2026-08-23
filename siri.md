@@ -329,8 +329,11 @@ Easy difference:
 
 resource → create/manage
 data     → read existing
-16. What is Terraform Import?
 
+
+```sh
+16. What is Terraform Import?
+```
 terraform import brings an existing infrastructure resource into Terraform state.
 
 For example, suppose an EC2 instance was manually created in AWS:

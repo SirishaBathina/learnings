@@ -976,3 +976,650 @@ Your Pod is running.
 ↓
 Pod Running
 ###
+
+
+Kubernetes Advanced Interview Notes
+1. Core Workloads
+Advanced Questions & Short Answers
+1 Deployment vs StatefulSet -
+2
+Deployment for stateless apps; StatefulSet for stateful apps
+with stable pod identity, ordered rollout, and persistent storage.
+DaemonSet -
+runs one pod on all or selected nodes; used for
+logging, monitoring, networking.
+3 ReplicaSet vs Deployment -
+
+Stateless Stateful
+Deployment StatefulSet
+One pod per node
+Deployment
+ا
+ReplicaSet maintains replica count; Deployment manages
+ReplicaSets and supports rolling updates and rollback. ReplicaSet ReplicaSet
+(4) What happens when a node fails?-
+control plane marks node unavailable; workloads are recreated
+on healthy nodes depending on controller and timing.
+介
+Rescheduled on healthy nodes
+(5)
+etcd
+etcddistributed key-value store holding cluster state and config.
+6Why etcd is critical
+• without it, cluster desired state cannot be reliably recovered.
+Reconciliation loop -
+controllers compare desired vs current state and act to
+make them match.
+kube-scheduler -
+4. Update
+Desired State
+(Spec)
+Reconciliation
+Loop
+Cluster State
+(Actual)
+Cluster State
+Config
+Metadata
+No etcd,
+No Cluster
+Recovery!
+1. Observe
+Controller
+K2. Compare
+chooses the best node for unscheduled pods.
+kube-controller-manager -
+runs controllers such as node, replica, endpoints, job. kubelet
+←
+(10 kubelet -
+node agent that ensures pod containers run as expected. Node
+JyothiMulkuntla
+Ensures Pods
+Running as Expected
+Page 2/8 Kubernetes Advanced Interview Notes
+2. Scheduling
+Advanced Questions & Short Answers
+
+affinity zone=us-east
+ssd=true
+zone=us-east
+ssd=true
+zone=us-west
+ssd=false (11 Node Affinity -
+• schedules pods to nodes based on labels.
+Nodes
+(12) Pod Affinityplaces pods near other matching pods.
+affinity
+(13 Pod Anti-Affinity
+• keeps matching pods apart for
+high availability.
+-
+anti-affinity ♡ 0
+(14) Taint on Node Taints & Tolerations- No matching
+toleration
+Matching
+toleration
+exists
+(15
+(16)
+• taints repel pods unless matching
+tolerations exist.
+Node Selector vs Node Affinity -
+• node Selector is simple exact match;
+affinity is more flexible with rules
+such as In, NotIn, Exists, preferred.
+topology Spread Constraints-
+• spreads pods across nodes/zones/regions
+for better availability.
+3. Networking
+(17) CNI -
+(18)
+Container Network Interface;
+provides pod networking.
+Examples: Calico, Cilium, Flannel.
+Pod-to-pod communication —
+every pod gets an IP; pods can
+communicate without NAT between pods.
+(19) kube-proxy -
+implements Service networking on nodes.
+(20) Cluster IP vs NodePort vs LoadBalancer -
+ClusterIP internal; NodePort exposes a port on nodes;
+LoadBalancer requests external load balancer.
+key = dedicated
+value = gpи
+effect =NoSchedule
+node Selector
+disktype: ssd
+env: prod
+(exact match)
+Node Affinity
+matchExpressions:
+- key: disktyре
+operator: In
+values: [ssd, nvme]
+(flexible rules)
+Spread across zones
+zone-a zone-b zone-c
+Direct communication
+CNI
+Node Node Node
+10.244.1.2 10.244.2.7
+소
+(no NAT)
+kube-proxy iptables/
+ipvs
+Node
+iptables/
+ipvs
+Node
+iptables/
+ipvs
+Node
+Cluster IP NodePort LoadBalancer
+Service
+10.0.0.15
+Service
+Node IP: 30080
+Service
+Cloud LB
+(21) Headless Service-
+(22)
+23
+clusterIP: None; used for direct pod
+discovery, common with StatefulSets.
+NetworkPolicy -
+controls allowed traffic between pods
+and sometimes external endpoints.
+Is Network Policy enforced automatically? -
+No, the CNI plugin must support
+policy enforcement.
+(internal only)
+Service
+cluster IP: None
+Allow
+frontend →backend
+Kubernetes API
+(accessible via NodeIP:Port) (external access)
+Pods discover
+each other
+directly via DNS
+→Alloved
+Denied
+Deny
+frontend -X db
+CNI Plugin
+(Enforces)
+NetworkPolicy
+JyothiMulkuntla
+4. Storage
+Kubernetes Advanced Interview Notes
+Advanced Questions & Short Answers
+Page 3/8
+
+(24) PV vs PVC -
+PV Bound To PVC
+>
+PV is storage resource; PVC is
+a workload's storage request. (Storage Resource) (Storage Request)
+(25) StorageClass
+defines how dynamic storage
+should be provisioned.
+StorageClass
+(e.g.,gp2, fast-ssd)
+Dynamic
+Provisioner
+PV Created
+(26) Dynamic volume provisioning
+• Kubernetes automatically creates storage
+when a PVC uses a suitable StorageClass.
+PVC StorageClass Provisioner
+PV
+Created
+27 StatefulSet volumeClaimTemplates -
+creates a separate PVC for each pod.
+e.g., mysql-0→ pvc-0, mysql-1→ pvc-1, mysąl-2→ pvc-2.
+5. Health Checks
+(28) Liveness vs Readiness -
+liveness decides restart;
+readiness decides whether
+pod gets traffic.
+StatefulSet (mysąl)
+Pod
+mysql-0
+Pod
+mysql-1
+Pod
+mysąl-2
+↓
+PVC
+pvc-0
+PVC
+pvc-1
+PVC
+pvc-2
+Liveness (Restart) Readiness (Traffic)
+Container
+Restarted
+Pod Gets
+Traffic
+(29) Startup Probe -
+for slow-starting apps; prevents
+liveness/readiness from interfering
+during startup.
+Startup Probe
+(during startup)
+(30) What if readiness probe fails? -
+container keeps running, but pod
+becomes NotReady and is removed
+from Service endpoints.
+Readiness
+Probe Fails
+Liveness/Readiness
+(after startup)
+NotReady
+Healthy
+Removed from
+Service Endpoints
+(31 What if liveness probe fails? -
+kubelet restarts the container.
+Liveness
+Probe Fails
+Container
+Restarted
+Healthy
+
+☆ Kubernetes Advanced Interview Notes Page 4/8
+Advanced Questions & Short Answers
+6. Resources & Scaling
+(32) Request vs Limit -
+• request is used for scheduling;
+limit is the maximum allowed
+resource usage where enforceable.
+(33) Exceed memory limitmay be terminated as OOMKilled.
+(34 Exceed CPU limit -
+(35)
+• usually throttled, not killed.
+HPAHorizontal Pod Autoscaler changes
+replica count based on metrics.
+CPU F
+ד
+request = 250m limit = 500m
+Pod
+OOMKilled
+Throttled
+(not killed)
+HPA
+CPU
+CPU/Memory
+Metrics
+
+request → for scheduling
+limit → max allowed
+(enforceable)
+Increase replica count
+based on metrics
+(36) VPA- VPA
+Vertical Pod Autoscaler recommends
+or adjusts CPU/memory requests.
+Recommends
+or Adjusts Pod
+cpu: 250m
+mem: 256Mi cpu: 500m
+mem: 512Mi
+Adjusts
+requests
+up or down
+(37 Cluster Autoscaler - Scale Up
+adds or removes worker nodes based
+on scheduling demand and safe
+scale-down.
+Cluster
+Autoscaler
+node node node node
+Scale Down
+node node node node
+☆ Requests = guaranteed baseline, Limits = upper cap ☆
+HPA vs VPA vs Cluster Autoscaler What it scales What it changes Decision based on
+HPA Pods (replicas) Number of Pods CPU/ Memory /
+Custom Metrics
+VPA T
+Cluster Autoscaler
+Pod resources CPU/ Memory
+requests & limits Usage patterns
+Nodes (workers) Number of Nodes Scheduling demand
+& safe scale-down
+JyothiMulkuntla
+☆ Kubernetes Advanced Interview Notes Page 5/8 ☆
+7. Security
+Advanced Questions & Short Answers
+(38) RBAC - Role-Based Access Control
+defines who can do what. User Permissions RBAC
+Role (Namespace Scoped)
+
+create pods
+get secrets
+delete pods
+Allowed Actions
+ClusterRole (Cluster-Wide)
+All Namespaces
+39) Role vs ClusterRole -
+Role is namespace-scoped; Namespace: dev
+ClusterRole is cluster-wide or
+reusable across namespaces. 8-
+(40) RoleBinding vs ClusterRoleBinding Role Binding
+Namespace: dev
+ClusterRole
+(41)
+RoleBinding grants permissions
+in a namespace;
+Cluster Role Binding grants
+cluster-wide permissions.
+Service Account -
+identity for workloads inside Kubernetes.
+(42 SecurityContext -
+security settings like
+- runAsNonRoot: true
+- readOnlyRootFilesystem: true
+- allow PrivilegeEscalation: false
+8 8 8
+dev prod
+Pod
+serviceAccount
+ClusterRole Binding
+Cluster-Wide
+Used by
+Pod to call
+Kubernetes API
+(✓ runAsNon Root: true
+43 Pod Security Admission -
+built-in enforcement of Pod Security
+Standards: Privileged, Baseline, Restricted.
+A
+readOnlyRootFilesystem: true
+allowPrivilegeEscalation: false
+A
+Privileged
+Unrestricted
+Baseline
+Minimally
+Restrictive
+Restricted
+Strongly
+Restricted
+8. Configuration ConfigMap Secret
+(44 ConfigMap vs Secret -
+ConfigMap for non-sensitive config;
+Secret for sensitive data.
+key: value
+key: value
+ConfigMap→ non-sensitive
+Secret → sensitive
+(45) Are Secrets encrypted by default? -
+•No; base64 is encoding, not encryption ;
+encryption at rest should be configured.
+(46 How apps consume ConfigMaps/Secretsvia environment variables, command
+arguments, or mounted volumes.
+Secret YAML Decoded base64
+data: ≠
+cGFzc3dvcmQ=
+8
+(encoding) password
+Enable encryption
+at rest in
+Kubernetes
+Encrypted
+000
+Environment
+Variables
+Command
+Arguments
+Mounted
+Volumes
+JyothiMulkuntla
+☆ Kubernetes Advanced Interview Notes Page 6/8
+☆
+Advanced Questions & Short Answers
+9. Deployment Strategies
+(47 Rolling Update
+(48)
+gradually replaces old pods with new ones
+while keeping availability.
+JyothiMulkuntla
+Old Pods (v1) New Pods (v2)
+A A
+Rolling Update in Progress
+Desired Replicas = 3 maxSurge = 1
+extra pods allowed above desired replicas
+during update.
+maxSurgeUp to 4 pods during update
+(49) max Unavailable -
+Desired Replicas = 3 maxUnavailable = 1
+how many pods may be unavailable
+during update.
+X
+At most 1 pod unavailable
+50 Rollback a Deployment v2 (Current) Rollback v1 (Previous)
+kubectl rollout undo deployment/myapp C
+history: kubectl rollout history deployment/myapp
+10. Troubleshooting
+Crash Restart
+(51 CrashLoopBackOff -
+container keeps crashing and restarting with backoff.
+(52 Image PullBackOff - </<
+image pull failed; causes include bad image name/tag,
+auth issue, registry or network issue.
+image:
+myapp:1.01
+53 Why a pod stays Pending -
+insufficient resources, affinity mismatch, untolerated taints,
+PVC issues, scheduling constraints. Pending
+Backoff
+(Increasing)
+Bad image name/tag
+Auth issue
+Registry or
+Network issue
+Insufficient resources
+Affinity mismatch
+Untolerated taints
+PVC issues
+Scheduling constraints
+(54) OOMKilled -
+container was killed due to memory
+pressure/limit exceedance.
+(55) How to troubleshoot a Service
+RIP
+OOMKilled
+-
+check svc, endpoints/endpointslices, pod labels, targetPort, readiness, Network Policy.
+Service Endpoints/
+EndpointSlices
+Pods
+Useful kubectl logs <pod>
+Commands kubectl logs <pod> --previous
+kubectl describe pod <pod> kubectl get svc
+kubectl get endpoints kubectl get endpointslices
+Also check:
+Correct
+Selector?
+Targets Ready?
+Labels match?
+Listening?
+targetPort
+Readiness
+NetworkPolicy
+000 JyothiMulkuntla 어
+Page 7/8
+☆ Kubernetes Advanced Interview Notes
+11. Architecture
+Advanced Questions & Short Answers
+(56) What happens after kubectl apply?-
+(57)
+(58)
+API Server validates request, stores state in etcd,
+controllers reconcile, scheduler assigns pods,
+kubelet starts containers via runtimе.
+CRI -
+Container Runtime Interface; lets Kubernetes
+talk to runtimes like containerd and CRI-O.
+CSI -
+JyothiMulkuntla
+API kubectl etcd Controllers Scheduler Kubelet Runtime Server
+containerd
+Kubernetes CRI
+CRI-O
+P
+Kubernetes → CSI Container Storage Interface; integrates
+storage systems with Kubernetes. EBS NFS Ceph
+(59) CRD -
+N
+Custom Resources
+</> Custom Resource Definition extends the
+Kubernetes API with custom resources.
+Define
+CRD
+Kubernetes
+API MyApp MyDB
+(60) Operator -
+Create CR Manage Custom
+Resource →
+uses custom resources and controllers
+to automate app-specific operations.
+Operator
+(Controller)
+Application Resources
+User
+12. Advanced Concepts Part 1 Pod
+(61 Init Container - Init
+Container
+Runs
+runs and completes before app containers start. First Container App
+Pod
+(62) Sidecar Container -
+Logging
+• helper container for logging, proxying,
+config sync, etc.
+Container App Sidecar
+Container
+Proxying
+Config Sync
+(63) PodDisruptionBudget -
+limits unavailable replicas during voluntary disruptions.
+PDB
+min Available: 2
+maxUnavailable: 1
+Pod
+1
+Pod
+2
+Pod Pod
+4
+At least 2 must remain available
+(64) Finalizer -
+delays deletion until cleanup is complete.
+Resource
+(With Finalizer)
+finalizers: [...]
+Delete Requested Cleanup
+Tasks...
+Cleanup
+Done Resource
+Deleted
+☑
+(65) OwnerReference -
+Owner
+(Deployment)
+defines ownership between resources and
+supports garbage collection.
+Owned by
+If owner is deleted,
+dependents are
+garbage collected. ReplicaSet Pod Service
+
+Page 8/8 ☆ Kubernetes Advanced Interview Notes
+Advanced Questions & Short Answers
+12. Advanced Concepts Part 2
+66 Garbage Collection -
+
+Owner Owner
+deleted
+cleans up dependent resources based on ownership and deletion policy. Garbage Collected
+(67) PriorityClass -
+High
+(100000)
+Medium
+(1000)
+Low
+(0)
+assigns pod priority.
+Higher value
+= higher
+priority
+68 Pod Preemption -
+Low Priority Evicted High Priority Pods Pod
+scheduler may evict lower-priority pods for a higher-priority pod. 000
+(69) Admission Controllers -
+API
+Admission
+Controller ☑ Allow
+Request
+validate or mutate API requests before persistence. Reject
+(70 Mutating vs Validating Admission - Mutating Validating
+mutating can modify objects; validating allows or rejects. Can modify
+objects
+Allows
+or rejects
+13. Scenario Questions Readiness
+Troubleshoot
+71 Pod is Running but app is unreachable -
+check readiness, Service selector, Service port/targetPort, EndpointSlice,
+Ingress/Gateway/LoadBalancer, NetworkPolicy, app logs.
+☑
+Checklist
+Service
+Endpoint Slice
+Ingress/LB
+NetworkPolicy
+72 Pod works by IP but not by Service name -
+check Service config; selector, EndpointSlices, CoreDNS,
+DNS config, network plugin.
+Service Name CoreDNS
+Logs
+IP Pods
+?
+(73 Pods not scheduling on a new node -
+check node readiness, taints, resources, affinity,
+node selectors, events.
+74 How to design high availability -
+use multiple replicas, multiple nodes, zone spread,
+pod anti-affinity or topology spread, readiness probes,
+Pod Disruption Budget, autoscaling.
+(75) Investigate high CPU usagecheck kubectl top pods, kubectl top nodes, describe pod,
+logs, CPU requests/limits, app behavior, HPA, monitoring metrics.
+Top 10 Must-Know Advanced Questions☆
+?
+1 How does Kubernetes schedule a pod?
+2 What happens when you run kubectl apply?
+249999 3 Difference between liveness, readiness, startup probes?
+4 What are requests vs limits and how do they work?
+Difference between taints/tolerations and affinity?
+6 How does Service networking work in Kubernetes?
+How would you troubleshoot a Pending pod?
+Difference between Deployment, StatefulSet, DaemonSet?
+How does Kubernetes handle node failure?
+10 How would you design a high availability application?
+
+New Node
+Not Ready
+Zone A Zone B Zone C
+Ω HA
+☑
+Spread across zones
+☑
+CPU Usage kubectl top pods
+100% ☑ kubectl top nodes
+50% ✓describe pod logs 0% ☑ requests/limits ✓HPA & Metrics
+Taints
+Resources
+Affinity/Node Selectors
+Events

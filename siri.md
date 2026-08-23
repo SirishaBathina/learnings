@@ -958,8 +958,8 @@ The CNI plugin gives the Pod its network connectivity.
 And finally...
 Your Pod is running.
 
-So the simple picture is:
-####
+#### So the simple picture is:
+
 "kubectl"
 ↓
 "API Server"

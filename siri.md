@@ -904,3 +904,75 @@ This is one of the core ideas behind Kubernetes:
 ******
 ### Whenever we apply the kubectl command, so basically kubectl reads the YAML manifest, then it sends a request to the kube API server and then API server validate the request, some sort of authentication and authorization, and then it store the data into the etcd. Then the scheduler assign the pod to a suitable worker node, then the kubelet on that specific node receives the instructions and ask the container runtime to create the container. Finally the pods start running, and the controller continuously ensure that the desired state is maintain like whatever the replica that we are mentioning inside the deployment file. So usually this is how the flow works.
 
+****
+*1. kubectl talks to the API Server
+
+Your YAML file is sent to the Kubernetes API Server.
+
+Think of the API Server as the main entry point of the Kubernetes cluster.
+
+*2. API Server checks your request
+
+Kubernetes checks things like:
+
+→ Are you allowed to create this Pod?
+→ Is the YAML valid?
+→ Are there any admission rules to follow?
+
+If everything looks good, Kubernetes accepts it.
+
+*3. Kubernetes remembers what you asked for
+
+The desired state of the Pod is stored in etcd.
+
+Basically, Kubernetes now knows:
+
+«"The user wants this Pod to exist."»
+
+*4. Scheduler finds a suitable Node
+
+The Pod doesn't know where it should run yet.
+
+The Scheduler looks at the available nodes and decides:
+
+«"This Node looks suitable for this Pod."»
+
+*5. kubelet on that Node gets to work
+
+Once the Node is selected, the kubelet on that machine notices:
+
+«"There is a new Pod assigned to me."»
+
+It starts working to create it.
+
+*6. Container runtime creates the container
+
+kubelet talks to the container runtime, such as containerd.
+
+The image is pulled and the container is created.
+
+* 7. Networking is configured
+
+The CNI plugin gives the Pod its network connectivity.
+
+And finally...
+Your Pod is running.
+
+So the simple picture is:
+
+"kubectl"
+↓
+"API Server"
+↓
+"etcd" → remembers desired state
+↓
+"Scheduler" → chooses the Node
+↓
+"kubelet" → manages the Pod
+↓
+"containerd" → creates the container
+↓
+"CNI" → handles networking
+↓
+Pod Running
+

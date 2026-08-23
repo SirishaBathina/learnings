@@ -111,3 +111,85 @@ git tag show v1.0     =====To show available commited tags
 git ignore
 
 branch potection rules in settings to scecure our repo
+
+##Git revert:
+
+git revert creates a new commit that undoes an earlier commit.
+
+It is the safer option when the commit has already been pushed to a shared branch.
+
+Example:
+
+git log --oneline
+
+Suppose:
+
+abc1234 Add login
+def5678 Add payment
+
+You want to undo def5678:
+
+git revert def5678
+
+Git creates a new commit:
+
+abc1234 Add login
+def5678 Add payment
+xyz9999 Revert "Add payment"
+Important
+
+The original commit is still in history. Git adds another commit to reverse its changes.
+
+Use it for:
+
+main
+develop
+shared branches
+commits already pushed to remote
+#### 2. git reset
+
+git reset moves the branch's HEAD backward.
+
+Suppose:
+
+A → B → C
+        ↑
+       HEAD
+
+Run:
+
+git reset --hard B
+
+Now:
+
+A → B
+    ↑
+   HEAD
+
+Commit C is no longer part of the current branch history.
+
+There are three important reset modes.
+
+--soft
+git reset --soft HEAD~1
+
+Removes the commit but keeps the changes staged.
+
+Commit removed
+     ↓
+Changes → Staged
+
+Useful when you want to modify/recreate the commit.
+
+--mixed — default
+git reset HEAD~1
+
+Removes the commit and keeps the changes in your working directory, but unstaged.
+
+Commit removed
+     ↓
+Changes → Unstaged
+--hard
+git reset --hard HEAD~1
+
+Removes the commit and removes the changes from the working directory.

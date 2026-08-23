@@ -60,9 +60,9 @@ provider "aws" {
 Flow:
 
 Terraform → Provider → Cloud/API
-
+```sh
 4. What is a Terraform Resource?
-
+```
 A resource represents an infrastructure object managed by Terraform.
 
 Examples:
@@ -84,6 +84,7 @@ Here:
 
 aws_instance = resource type
 web = resource name
+
 ```sh
 5. What is Terraform State?
 ```
@@ -102,8 +103,8 @@ Terraform configuration
 Actual infrastructure
 
 State can contain sensitive information, so in production we normally use a remote backend with access control and encryption.
-```sh
 
+```sh
 6. Difference between terraform plan and terraform apply
 ```
 terraform plan
@@ -127,6 +128,7 @@ terraform apply
 Interview answer:
 
 "terraform plan is a preview, while terraform apply executes the proposed infrastructure changes."
+
 ``` sh
 7. What does terraform init do?
 ```
@@ -144,6 +146,7 @@ Example:
 terraform init
 
 Usually, this is the first Terraform command we run after cloning a project.
+
 ```sh
 8. What does terraform destroy do?
 ```
@@ -154,6 +157,8 @@ terraform destroy
 Terraform creates a destruction plan and normally asks for confirmation.
 
 Production caution: Never blindly run terraform destroy against production.
+
+
 ```sh 
 9. What are Terraform Variables?
 ```
@@ -181,7 +186,10 @@ For example:
 dev  → t3.micro
 qa   → t3.medium
 prod → m5.large
+
+```sh
 10. What are Terraform Outputs?
+```
 
 Outputs expose useful information after Terraform creates resources.
 
@@ -202,6 +210,8 @@ Load Balancer DNS
 VPC ID
 Subnet ID
 Database endpoint
+
+
 ```sh
 11. What is a Terraform Module?
 ```
@@ -224,6 +234,8 @@ module "web_server" {
 Why modules?
 
 Instead of writing the same EC2/VPC configuration repeatedly, we create it once and reuse it.
+
+
 ```sh
 12. What is a Terraform Backend?
 ```
@@ -244,6 +256,8 @@ terraform {
 }
 
 For team environments, remote state is preferred because multiple engineers and CI/CD pipelines need to work with the same state.
+
+
 ```sh 
 13. What is State Locking?
 ```
@@ -256,7 +270,9 @@ Engineer B → terraform apply → WAIT
 
 This prevents concurrent modifications and helps avoid state corruption.
 
+ ```sh
 14. Difference between count and for_each
+```
 
 Both can create multiple resources.
 
@@ -332,9 +348,9 @@ Important interview point:
 Import adds the resource to Terraform state; it does not automatically generate the complete Terraform configuration for that resource.
 
 After import, we should create/update the Terraform configuration so it matches the actual resource.
-
+```sh
 17. What happens if someone manually changes infrastructure?
-
+```
 This is called configuration drift.
 
 Suppose Terraform configuration says:
@@ -357,8 +373,10 @@ Actual:  t3.large
 terraform plan
               ↓
 Change back to t3.micro
-18. What is the Terraform lifecycle block?
 
+```sh
+18. What is the Terraform lifecycle block?
+```
 The lifecycle block controls how Terraform handles resource changes.
 
 Important options:
@@ -386,7 +404,10 @@ lifecycle {
     tags
   ]
 }
+
+```sh 
 19. How do you manage multiple environments?
+```
 
 Common environments:
 
@@ -422,7 +443,9 @@ prod → larger instance
 
 The important point is to keep production state isolated from non-production state.
 
+```sh 
 20. Explain the Terraform workflow
+```
 
 A typical workflow is:
 
@@ -460,9 +483,9 @@ terraform apply
    ↓
 Cloud Infrastructure
 
-
-Two developers run terraform apply at the same time. What happens?
-
+```sh
+###Two developers run terraform apply at the same time. What happens?
+```
 If both developers are using the same remote Terraform state and the backend supports state locking, Terraform locks the state when the first apply starts.
 
 For example:
@@ -493,9 +516,9 @@ Interview answer
 Important point
 
 State locking is especially important when Terraform is used by a team or CI/CD pipeline.
-
-2. Someone manually deletes an EC2 instance managed by Terraform. What happens?
-
+```sh
+##2. Someone manually deletes an EC2 instance managed by Terraform. What happens?
+```
 Suppose Terraform manages:
 
 aws_instance.web
@@ -536,9 +559,9 @@ Interview answer
 Extra point
 
 This is an example of configuration drift.
-
-3. Your Terraform state file is deleted. What will you do?
-
+```sh
+##3. Your Terraform state file is deleted. What will you do?
+```
 This is a very important interview question.
 
 First, don't immediately run terraform apply.
@@ -602,8 +625,9 @@ Backups
 
 This makes state recovery much easier.
 
+```sh 
 4. How would you manage separate Dev, QA, UAT and Production environments?
-
+```
 I would use reusable modules and keep each environment's configuration and state isolated.
 
 For example:
@@ -662,8 +686,10 @@ Terraform plan
 Approval
   ↓
 Terraform apply
-5. How would you securely store Terraform state?
 
+```sh
+##5. How would you securely store Terraform state?
+```
 Terraform state can contain sensitive information, so I would avoid storing it locally or committing it to Git.
 
 For AWS, a common approach is:
@@ -708,8 +734,9 @@ to Git.
 
 Add it to .gitignore.
 
-6. How would you use Terraform in a Jenkins pipeline?
-
+```sh
+##6. How would you use Terraform in a Jenkins pipeline?
+```
 This is especially important for a DevOps interview.
 
 A typical Jenkins pipeline would be:

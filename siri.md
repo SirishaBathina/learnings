@@ -959,7 +959,7 @@ And finally...
 Your Pod is running.
 
 So the simple picture is:
-
+####
 "kubectl"
 ↓
 "API Server"
@@ -975,4 +975,4 @@ So the simple picture is:
 "CNI" → handles networking
 ↓
 Pod Running
-
+###

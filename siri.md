@@ -1,5 +1,6 @@
+```sh
 What is Terraform?
-
+```
 Terraform is an Infrastructure as Code (IaC) tool developed by HashiCorp. It allows us to define and manage infrastructure using configuration files.
 
 For example, instead of manually creating an EC2 instance from the AWS console, we can define it in Terraform:
@@ -39,9 +40,9 @@ Code review through Git
 Interview answer:
 
 "Infrastructure as Code means defining infrastructure in configuration files so that it can be created and managed automatically and consistently."
-
+```sh
 3. What is a Terraform Provider?
-
+```
 A provider is a plugin that allows Terraform to communicate with an external platform or API.
 
 Examples:
@@ -85,8 +86,9 @@ Here:
 
 aws_instance = resource type
 web = resource name
+```sh
 5. What is Terraform State?
-
+```
 Terraform state keeps track of the resources Terraform manages and their current known attributes.
 
 By default, Terraform stores state in:
@@ -102,9 +104,10 @@ Terraform configuration
 Actual infrastructure
 
 State can contain sensitive information, so in production we normally use a remote backend with access control and encryption.
+```sh
 
 6. Difference between terraform plan and terraform apply
-
+```
 terraform plan
 
 Shows what Terraform would change.
@@ -126,9 +129,9 @@ terraform apply
 Interview answer:
 
 "terraform plan is a preview, while terraform apply executes the proposed infrastructure changes."
-
+``` sh
 7. What does terraform init do?
-
+```
 terraform init initializes the Terraform working directory.
 
 It can:
@@ -143,9 +146,9 @@ Example:
 terraform init
 
 Usually, this is the first Terraform command we run after cloning a project.
-
+```sh
 8. What does terraform destroy do?
-
+```
 It removes infrastructure managed by Terraform.
 
 terraform destroy
@@ -153,9 +156,9 @@ terraform destroy
 Terraform creates a destruction plan and normally asks for confirmation.
 
 Production caution: Never blindly run terraform destroy against production.
-
+```sh 
 9. What are Terraform Variables?
-
+```
 Variables make Terraform configurations reusable and configurable.
 
 Instead of hardcoding:
@@ -201,8 +204,9 @@ Load Balancer DNS
 VPC ID
 Subnet ID
 Database endpoint
+```sh
 11. What is a Terraform Module?
-
+```
 A module is a reusable collection of Terraform configuration files.
 
 Example:
@@ -222,9 +226,9 @@ module "web_server" {
 Why modules?
 
 Instead of writing the same EC2/VPC configuration repeatedly, we create it once and reuse it.
-
+```sh
 12. What is a Terraform Backend?
-
+```
 A backend determines where Terraform stores its state.
 
 Local:
@@ -242,9 +246,9 @@ terraform {
 }
 
 For team environments, remote state is preferred because multiple engineers and CI/CD pipelines need to work with the same state.
-
+```sh 
 13. What is State Locking?
-
+```
 State locking prevents multiple Terraform operations from modifying the same state simultaneously.
 
 For example:
@@ -294,9 +298,9 @@ each.value
 Easy interview line:
 
 "count is index-based, while for_each is key-based."
-
+``` sh 
 15. What are Terraform Data Sources?
-
+```
 A data source allows Terraform to read existing information without creating that resource.
 
 Example:

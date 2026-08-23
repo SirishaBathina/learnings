@@ -13,9 +13,7 @@ resource "aws_instance" "web" {
 Terraform then communicates with AWS through the AWS provider.
 
 ```sh
-
 2. What is Infrastructure as Code?
-
 ```
 IaC means managing infrastructure through code instead of manually using cloud consoles.
 

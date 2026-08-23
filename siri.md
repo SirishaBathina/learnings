@@ -848,3 +848,59 @@ Interview answer
 * Dev/QA/UAT/Prod	=> Reusable modules + separate environment configurations/state
  * Secure state => 	Remote backend + encryption + versioning + IAM + locking
 * Jenkins + Terraform	init → validate → plan → approval → apply
+
+
+What really happens when you run   kubectl apply -f deployment.yaml ? 
+Most of us use this command every day 👉 
+          kubectl apply -f deployment.yaml
+But what happens behind the scenes?
+
+Here’s the simplified flow 👇
+
+1. kubectl reads the YAML 
+kubectl reads the Kubernetes manifest and converts it into an API request.
+
+2.Request goes to the API Server
+The request reaches the Kubernetes API Server, which handles:
+        → Authentication
+        → Authorization
+        → Validation
+        → Admission checks
+
+3. Desired state is stored in etcd
+Once accepted, Kubernetes stores the desired configuration in etcd, the cluster's key-value store.
+
+4.Deployment Controller takes action
+
+The Deployment Controller watches the desired state and creates/updates a ReplicaSet.
+
+#The ReplicaSet then ensures the required number of Pods exist.
+
+5.Scheduler selects a node
+
+For newly created Pods, the Scheduler finds a suitable worker node based on resources, affinity rules, taints/tolerations, and other scheduling constraints.
+
+6.Kubelet starts the Pod
+
+The kubelet on the selected node notices that a Pod is assigned to it.
+
+It communicates with the container runtime through the CRI to pull the image and create the containers.
+
+7.Kubernetes keeps watching
+
+This is the most important part.
+Kubernetes continuously compares:
+
+Desired State ↔ Current State
+If you requested:
+replicas: 3
+but only 2 Pods are running, Kubernetes controllers work to bring the cluster back to 3.
+
+This is the simplified flow:
+kubectl → API Server → etcd → Deployment Controller → ReplicaSet → Scheduler → Kubelet → Container Runtime → Running Pod
+         
+This is one of the core ideas behind Kubernetes:
+
+******
+### Whenever we apply the kubectl command, so basically kubectl reads the YAML manifest, then it sends a request to the kube API server and then API server validate the request, some sort of authentication and authorization, and then it store the data into the etcd. Then the scheduler assign the pod to a suitable worker node, then the kubelet on that specific node receives the instructions and ask the container runtime to create the container. Finally the pods start running, and the controller continuously ensure that the desired state is maintain like whatever the replica that we are mentioning inside the deployment file. So usually this is how the flow works.
+

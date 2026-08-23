@@ -837,11 +837,11 @@ Interview answer
 
 "I would integrate Terraform into Jenkins using stages such as checkout, init, validate, plan and apply. The plan would be generated first and reviewed or approved before apply. AWS credentials would be stored securely in Jenkins or provided through an appropriate IAM-based authentication mechanism, and Terraform state would be stored in a remote backend with locking."
 
-⭐ Quick interview revision
-Scenario	Best answer
-Two apply at same time	State locking prevents concurrent state modification
-EC2 manually deleted	Terraform detects drift and plans to recreate it
-State deleted	Restore remote state backup/version; otherwise import resources
-Dev/QA/UAT/Prod	Reusable modules + separate environment configurations/state
-Secure state	Remote backend + encryption + versioning + IAM + locking
-Jenkins + Terraform	init → validate → plan → approval → apply
+⭐### Quick interview revision
+
+* Two apply at same time	=> State locking prevents concurrent state modification
+* EC2 manually deleted	=>Terraform detects drift and plans to recreate it
+ * State deleted	=> Restore remote state backup/version; otherwise import resources
+* Dev/QA/UAT/Prod	=> Reusable modules + separate environment configurations/state
+ * Secure state => 	Remote backend + encryption + versioning + IAM + locking
+* Jenkins + Terraform	init → validate → plan → approval → apply

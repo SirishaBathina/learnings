@@ -1,0 +1,13 @@
+What is a subnet?
+
+A subnet is a smaller network inside a bigger network.
+
+CIDR decides the IP range.
+
+Subnet divides the VPC into smaller networks.
+
+Route table decides where traffic goes.
+
+Security Group controls which traffic is allowed.
+
+CIDR is a way of deciding how many IP addresses belong to a network and how many can be used by devices/servers.

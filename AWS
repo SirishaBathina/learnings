@@ -6,3 +6,26 @@ docker push  851725226757.dkr.ecr.ap-south-1.amazon.aws.com/demosiri:latest
 ***************************
 
 
+
+
+Run code with out thinking about servers just upload your code lamba handles 
+You don't need to manage:
+
+EC2
+OS
+Servers
+Patching
+Capacity planning
+
+AWS Lambda is a serverless, event-driven compute service that runs code in response to events.
+
+Event
+   ↓
+Lambda
+   ↓
+Your code
+   ↓
+Response
+
+
+

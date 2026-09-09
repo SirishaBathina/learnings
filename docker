@@ -120,3 +120,25 @@ docker pull <imagename>
 
 To login to dockerhubin cmdline
 echo "pwd" | docker login -u username --password-stdin
+
+
+
+FROM python:3.12-slim    =>Defines the base image.
+
+WORKDIR /app   =>Sets the working directory.
+
+COPY requirements.txt .   =>Copies files into the image.
+
+RUN pip install --no-cache-dir -r requirements.txt   =>Executes commands during image build.
+
+COPY . .
+
+EXPOSE 8080    =>Documents the port the application uses.
+
+ENV APP_ENV=production
+
+CMD ["python", "app.py"]   =>Defines the default command when the container starts.
+
+ENTRYPOINT
+
+Defines the main executable for the container

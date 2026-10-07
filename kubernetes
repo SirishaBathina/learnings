@@ -40,3 +40,25 @@ Here are some common Kubernetes issues and their resolutions Part 1:
 📊 Issue: Metrics Server Not Working
 🔍 Cause: Incorrect installation or configuration.
 🔧 Resolution: Ensure the Metrics Server is deployed correctly. Check logs for errors using kubectl logs -n kube-system [metrics-server-pod].
+
+
+
+
+CRI — Container Runtime Interface
+
+Defines the gRPC-based communication between the kubelet and the container runtime  managing Pod sandboxes and containers.
+                kubelet → CRI → containerd / CRI-O → Pod sandbox + containers
+Kubernetes removed its built-in Docker Engine integration (dockershim) in v1.24. Today, containerd and CRI-O are the common CRI runtimes.
+
+🔹 CNI — Container Network Interface
+
+Defines a standard plugin model for container networking.
+Important: the kubelet does not call CNI directly. The actual flow is:
+            kubelet → CRI → container runtime → CNI → network plugin → Pod network
+CNI configures interfaces, IP addresses, routes, and more. Common Kubernetes networking solutions include Calico, Cilium, Flannel, and Antrea — each implementing CNI differently, with very different feature sets.
+
+🔹 CSI — Container Storage Interface
+
+A standard way for Kubernetes to integrate with external storage systems.
+         Kubernetes storage components → CSI → CSI driver → controller ops (provision/attach) + node ops (stage/mount)
+CSI drivers handle creating, attaching, mounting, and expanding volumes. Examples:  vSphere CSI, Ceph CSI and many more
